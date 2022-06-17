@@ -1,2 +1,0 @@
-C:/Users/lqq/Desktop/zyx是sb/StudentManagement/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/lqq/Desktop/zyx是sb/StudentManagement/cmake-build-debug/CMakeFiles/rebuild_cache.dir
