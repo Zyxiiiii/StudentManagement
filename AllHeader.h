@@ -6,6 +6,7 @@
 
 typedef char* String;
 
+
 #endif // !STRING
 
 
@@ -32,5 +33,6 @@ typedef int Status;
 #include<malloc.h>
 #include"Structs.h"
 #include"Window.h"
+#include"Controller.h"
 
 

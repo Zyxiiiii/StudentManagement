@@ -1,6 +1,14 @@
-﻿#include "AllHeader.h"
+﻿#include <tuple>
 
-int main()
+#include "AllHeader.h"
+
+int main(int argc, char** argv)
 {
-    
+    IndexWindow();
+
+    getchar();
+
+    system("pause");
+
+    return 0;
 }

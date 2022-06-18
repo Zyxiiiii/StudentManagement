@@ -5,17 +5,17 @@
 #define STUDENT_MANAGEMENT_STRUCT_DEFINE
 
 // the class struct
-typedef struct Class {
+typedef struct Lesson {
 	String name;
 	float score;
-}*ClassList;
+}*LessonList;
 
 // the student struct
 typedef struct Student {
 	int id;
 	String name;
 	char sex;
-	ClassList classes;
+	LessonList lessons;
 	String address;
 }*StudentSet;
 
@@ -25,6 +25,8 @@ typedef struct StudentNode {
 	Student data;
 	StudentNode* next;
 }*StudentList;
+
+static StudentList student_list;
 
 
 #endif
@@ -37,17 +39,17 @@ typedef struct StudentNode {
 
 /**
  * \brief count the student number and return
- * \param studentList the student list
+ * \param student_list the student list
  * \return the number of student list
  */
-int StudentCount(StudentList studentList);
+int StudentCount(StudentList student_list);
 
 /**
  * \brief write the student list data to binary object
- * \param studentList the student list
+ * \param student_list the student list
  * \return write status
  */
-Status WriteStudent(StudentList studentList);
+Status WriteStudent(StudentList student_list);
 
 /**
  * \brief read the student list data from binary object
@@ -56,33 +58,33 @@ Status WriteStudent(StudentList studentList);
 StudentList ReadStudent();
 
 /**
- * \brief set a score by student's id and class name
- * \param studentId student id
- * \param className the name of the class
+ * \brief set a score by student's id and lesson name
+ * \param student_id student id
+ * \param lesson_name the name of the lesson
  * \param score the score
  */
-void SetClassScore(int studentId, String className, float score);
+void SetLessonScore(int student_id, String lesson_name, float score);
 
 /**
- * \brief get someone score by the student's id and the class name
- * \param studentId student id
- * \param className the name of the class
+ * \brief get someone score by the student's id and the lesson name
+ * \param student_id student id
+ * \param lesson_name the name of the lesson
  * \return the score
  */
-float GetClassScore(int studentId, String className);
+float GetLessonScore(int student_id, String lesson_name);
 
 /**
  * \brief insert a student into the student list
  * \param student a new student
- * \param studentList the student list
+ * \param student_list the student list
  */
-void AddStudentToList(StudentNode * student, StudentList studentList);
+void AddStudentToList(StudentNode * student, StudentList student_list);
 
 /**
  * \brief find a student in the student list by id
  * \param id student id
- * \param studentList the student list
+ * \param student_list the student list
  * \return a student ptr to the student u want
  */
-Student* GetStudent(int id, StudentList studentList);
+Student* GetStudent(int id, StudentList student_list);
 #endif // !STUDENT_STRUCT_FUNCTION
