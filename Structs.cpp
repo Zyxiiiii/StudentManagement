@@ -1,17 +1,23 @@
 #include "AllHeader.h"
 
-// 私有声明
+// private declaration
 
+// the path of the student object
 #define STUDENT_BINARY_OBJ "./student.obj"
 
 #ifndef STUDENT_PRIVATE_DEF
 
 #define STUDENT_PRIVATE_DEF
 
-// 移动到下一结点
+/**
+ * \brief move the student to his next node
+ * \param student student node
+ */
 void ToNextNode(StudentNode* student);
 
-// 初始化学生链表
+/**
+ * \brief init tht student list
+ */
 void InitStudentList(StudentList);
 
 
@@ -20,27 +26,30 @@ void InitStudentList(StudentList);
 
 Status WriteStudent(StudentList studentList)
 {
-	// 确保从头开始
+	// ensure it will begin at head node
 	studentList = studentList->head;
 	int size = StudentCount(studentList);
 	StudentSet students = (StudentSet)malloc(size * sizeof(Student));
-	// 包装成集合
+	// package them to a set
 	for (int i = 0; i < size; i++)
 	{
 		*(students + size) = studentList->data;
 		ToNextNode(studentList);
 	}
-	// 开始写入
+	// start writing
 	FILE* file = fopen(STUDENT_BINARY_OBJ, "wb");
 	fwrite(students, sizeof(Student), size, file);
 	fclose(file);
+	return OK;
 }
 
 StudentList ReadStudent()
 {
 	FILE * file = fopen(STUDENT_BINARY_OBJ, "rb");
 	
-	// 将file置于文件末尾，读出当前的位置——即文件占的字节数，除以Student所占的字节大小，即可得知有多少个对象
+	// move the file ptr point to the end of the file,
+	// and get it position to know the size of this file,
+	// than could get the size of the student through the file's size divide by the student's size at last
 	fseek(file, 0L, SEEK_END);
 	int size = ftell(file) / sizeof(Student);
 	StudentSet students = (StudentSet) malloc(sizeof(Student) * size);
