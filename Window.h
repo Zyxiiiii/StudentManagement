@@ -10,5 +10,9 @@
  */
 void IndexWindow();
 
+/**
+ * \brief the student info window
+ */
+void StudentInfoWindow();
 
 #endif // !MAIN_WINDOW_DEF

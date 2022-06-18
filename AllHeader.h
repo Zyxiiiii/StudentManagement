@@ -1,11 +1,24 @@
 #pragma once
 
-#ifndef STRING_DEF	
+#ifndef STRING_DEF
 
 #define STRING_DEF	
 
 typedef char* String;
 
+/**
+ * \brief init a new string list and return
+ * \param length the size of the string list
+ * \return the string which has initialized
+ */
+String* InitStringList(int length);
+
+/**
+ * \brief free the memory size of a list
+ * \param string_list the string list is waiting for free
+ * \param length the length of the list
+ */
+void FreeStringList(String* string_list, int length);
 
 #endif // !STRING
 
@@ -34,5 +47,3 @@ typedef int Status;
 #include"Structs.h"
 #include"Window.h"
 #include"Controller.h"
-
-

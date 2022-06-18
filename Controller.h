@@ -1,6 +1,21 @@
 ﻿#pragma once
 
+
+#ifndef CONTROLLERS_DEF
+
+#define CONTROLLERS_DEF
+
+// the controllers for all the window
+
 /**
- * \brief the choice controller of the start window
+ * \brief the start window
  */
-void StartController();
+void IndexController();
+
+/**
+ * \brief student info window
+ */
+void StudentInfoController();
+
+#endif
+

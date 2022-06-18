@@ -15,7 +15,24 @@ int GetOrderInput();
 #endif
 
 
-void StartController()
+void IndexController()
+{
+    switch (GetOrderInput())
+    {
+    case 1:
+        StudentInfoWindow();
+        break;
+    case 2:
+        break;
+    case 3:
+        exit(0);
+    default:
+        printf("请输入正确的命令:");
+        IndexController();
+    }
+}
+
+void StudentInfoController()
 {
     switch (GetOrderInput())
     {
@@ -24,10 +41,15 @@ void StartController()
     case 2:
         break;
     case 3:
-        exit(0);
+        break;
+    case 4:
+        break;
+    case 5:
+        IndexWindow();
+        break;
     default:
         printf("请输入正确的命令:");
-        StartController();
+        StudentInfoController();
     }
 }
 
