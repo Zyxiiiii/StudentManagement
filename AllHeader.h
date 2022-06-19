@@ -31,10 +31,29 @@ typedef int Status;
 
 #define OK 0
 
-#define ERROR -1
+#define ERROR (-1)
 
 #define EXCEPTION 1
+
+#define NOT_ID (-1)
+
+#define MAN 'm'
+
+#define WOMEN 'f'
+
 #endif // !CONSTANT_DEF
+
+#ifndef INPUT_DEF
+
+#define INPUT_DEF
+
+/**
+ * \brief control the client input will give a meaningful value
+ * \return client input
+ */
+int GetOrderInput();
+
+#endif
 
 
 // header
@@ -47,3 +66,4 @@ typedef int Status;
 #include"Structs.h"
 #include"Window.h"
 #include"Controller.h"
+#include "Service.h"

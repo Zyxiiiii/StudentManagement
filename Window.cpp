@@ -10,16 +10,16 @@ void MainWindow(String *body, int lines)
 {
     system("CLS");
 
-    printf("\n\n%s\n\n", &HEADER);
+    printf("\n\n\t\t\t\t\t\t%s\n\n", &HEADER);
 
     for (int i = 0; i < lines; i++)
     {
-        printf("%d. %s\n\n", i + 1, *(body + i));
+        printf("\t\t\t%d. %s\n\n", i + 1, *(body + i));
     }
 
-    printf("%d. 退出\n\n", lines + 1);
+    printf("\t\t\t%d. 退出\n\n", lines + 1);
 
-    printf("请输入相应的命令:");
+    printf("\t\t\t请输入相应的命令:");
     
     FreeStringList(body, lines);
 }

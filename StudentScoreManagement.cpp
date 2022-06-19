@@ -1,15 +1,17 @@
 ﻿#include "AllHeader.h"
 
 int main(int argc, char** argv)
-{
+{    
+    ReadStudent();
+    
     IndexWindow();
-
-    getchar();
 
     system("pause");
 
     return 0;
 }
+
+// these is some public function which is not a part of every model
 
 String* InitStringList(int length)
 {
@@ -33,4 +35,20 @@ void FreeStringList(String* string_list, int length)
 
     // free the memory of the list
     free(string_list);
+}
+
+int GetOrderInput()
+{
+    String origin_input = (String) malloc(sizeof(char) * 2);
+    scanf_s("%s", origin_input, 2);
+    // compare origin_input with "" can know the size of client input is out of index or not
+    char order = origin_input[0];
+    if (strcmp(origin_input, "") != 0 && (order >= '0' && order < '9'))
+    {
+        free(origin_input);
+        return (int) order - '0';
+    }
+    printf("\t\t\t请输入正确的命令:");
+    free(origin_input);
+    GetOrderInput();
 }

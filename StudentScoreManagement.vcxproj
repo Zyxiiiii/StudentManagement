@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Service.cpp" />
     <ClCompile Include="Structs.cpp" />
     <ClCompile Include="StudentScoreManagement.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="AllHeader.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Service.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Structs.h" />
   </ItemGroup>

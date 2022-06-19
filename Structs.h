@@ -5,28 +5,55 @@
 #define STUDENT_MANAGEMENT_STRUCT_DEFINE
 
 // the class struct
-typedef struct Lesson {
-	String name;
-	float score;
-}*LessonList;
+typedef struct Lesson
+{
+    String name;
+    float score;
+}* LessonSet;
+
+typedef struct LessonNode
+{
+    LessonNode* head;
+    Lesson data;
+    LessonNode* next;
+}* LessonList;
 
 // the student struct
-typedef struct Student {
-	int id;
-	String name;
-	char sex;
-	LessonList lessons;
-	String address;
-}*StudentSet;
+typedef struct Student
+{
+    int id;
+    String name;
+    char sex;
+    LessonList lessons;
+    String address;
+}* StudentSet;
+
+typedef struct Lesson_Data
+{
+ char name[30] = {'\0'};
+ float score;
+}* Lesson_Data_Set;
+
+// the model use to save to or read from binary data
+typedef struct Student_Data
+{
+    int id;
+    char name[32] = {'\0'};
+    char sex;
+    Lesson_Data lessons[20];
+    char address[60] = {'\0'};
+}* Student_Data_Set;
+
 
 // the student node
-typedef struct StudentNode {
-	StudentNode* head;
-	Student data;
-	StudentNode* next;
-}*StudentList;
+typedef struct StudentNode
+{
+    StudentNode* head;
+    Student data;
+    StudentNode* next;
+}* StudentList;
 
-static StudentList student_list;
+static StudentList global_student_list;
 
 
 #endif
@@ -52,10 +79,62 @@ int StudentCount(StudentList student_list);
 Status WriteStudent(StudentList student_list);
 
 /**
- * \brief read the student list data from binary object
- * \return student list
+ * \brief read the student list data from binary object and set it to the global variable
  */
-StudentList ReadStudent();
+void ReadStudent();
+
+/**
+ * \brief insert a student into the student list
+ * \param student a new student
+ * \param student_list the student list
+ */
+void AddStudentToList(StudentNode* student, StudentList student_list);
+
+/**
+ * \brief find a student in the student list by id
+ * \param id student id
+ * \param student_list the student list
+ * \return a student ptr to the student u want
+ */
+Student* GetStudent(int id, StudentList student_list);
+
+/**
+ * \brief init a new student node and return
+ * \return a new student Node
+ */
+StudentNode CreateNewStudent();
+
+/**
+ * \brief parse a ordinary data to data model
+ * \param students the student set which will parse to data model
+ * \return the parse result for ordinary data
+ */
+Student_Data_Set ParseToModel(StudentSet students, int size);
+
+/**
+ * \brief parse the data read from binary data to ordinary data
+ * \param student_data_set the data model include ordinary data
+ * \param size the size of the data set
+ * \return the student set
+ */
+StudentSet ParseToObject(Student_Data_Set student_data_set, int size);
+
+/**
+ * \brief create a new student set and return
+ * \param size declare the size of the new set
+ * \return new student set
+ */
+StudentSet CreateStudentSet(int size);
+
+
+/**
+ * \brief create a new student data set and return
+ * \param size declare the size of the new set
+ * \return new student data set
+ */
+Student_Data_Set CreateStudentDataSet(int size);
+
+// the declaration for Lesson struct
 
 /**
  * \brief set a score by student's id and lesson name
@@ -74,17 +153,16 @@ void SetLessonScore(int student_id, String lesson_name, float score);
 float GetLessonScore(int student_id, String lesson_name);
 
 /**
- * \brief insert a student into the student list
- * \param student a new student
- * \param student_list the student list
+ * \brief create a new lesson list and return
+ * \return a new lesson list
  */
-void AddStudentToList(StudentNode * student, StudentList student_list);
+LessonList CreateNewLessonList();
 
 /**
- * \brief find a student in the student list by id
- * \param id student id
- * \param student_list the student list
- * \return a student ptr to the student u want
+ * \brief count the list and return the number
+ * \param lesson_list the lesson list
+ * \return the number of lessons
  */
-Student* GetStudent(int id, StudentList student_list);
+int LessonCount(LessonList lesson_list);
+
 #endif // !STUDENT_STRUCT_FUNCTION
