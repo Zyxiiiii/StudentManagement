@@ -13,7 +13,6 @@ typedef struct Lesson
 
 typedef struct LessonNode
 {
-    LessonNode* head;
     Lesson data;
     LessonNode* next;
 }* LessonList;
@@ -30,7 +29,7 @@ typedef struct Student
 
 typedef struct Lesson_Data
 {
- char name[30] = {'\0'};
+ char name[30];
  float score;
 }* Lesson_Data_Set;
 
@@ -38,22 +37,20 @@ typedef struct Lesson_Data
 typedef struct Student_Data
 {
     int id;
-    char name[32] = {'\0'};
+    char name[32];
     char sex;
     Lesson_Data lessons[20];
-    char address[60] = {'\0'};
+    char address[60];
 }* Student_Data_Set;
 
 
 // the student node
 typedef struct StudentNode
 {
-    StudentNode* head;
     Student data;
     StudentNode* next;
 }* StudentList;
 
-static StudentList global_student_list;
 
 
 #endif
@@ -81,35 +78,42 @@ Status WriteStudent(StudentList student_list);
 /**
  * \brief read the student list data from binary object and set it to the global variable
  */
-void ReadStudent();
+StudentList* ReadStudent();
 
 /**
  * \brief insert a student into the student list
  * \param student a new student
  * \param student_list the student list
  */
-void AddStudentToList(StudentNode* student, StudentList student_list);
+void AddStudentToList(StudentNode* student, StudentList* student_list);
 
 /**
  * \brief find a student in the student list by id
  * \param id student id
  * \param student_list the student list
- * \return a student ptr to the student u want
+ * \return a student ptr to the student u want, but if there isn't data match, NULL will be return
  */
 Student* GetStudent(int id, StudentList student_list);
 
 /**
  * \brief init a new student node and return
+ * \param student the data use to init this node
  * \return a new student Node
  */
-StudentNode CreateNewStudent();
+StudentNode CreateNewStudentNode(Student student);
 
 /**
- * \brief parse a ordinary data to data model
- * \param students the student set which will parse to data model
+ * \brief parse a ordinary data to data model, tips: this function will free the memory of the param students, don't use it after that
+ * \param students the student set which will parse to data model, after this function running, this variable will be free
  * \return the parse result for ordinary data
  */
-Student_Data_Set ParseToModel(StudentSet students, int size);
+Student_Data_Set ParseToModel(StudentSet* students, int size);
+
+/**
+ * \brief release the memory of this student
+ * \param student the student whose memory will be release
+ */
+void ReleaseStudentSetMemory(StudentSet* student);
 
 /**
  * \brief parse the data read from binary data to ordinary data
@@ -119,6 +123,11 @@ Student_Data_Set ParseToModel(StudentSet students, int size);
  */
 StudentSet ParseToObject(Student_Data_Set student_data_set, int size);
 
+/**
+ * \brief release the memory of the student data set
+ * \param student_data the data set whose memory will be release
+ */
+void ReleaseStudentDataSetMemory(Student_Data_Set*  student_data);
 /**
  * \brief create a new student set and return
  * \param size declare the size of the new set

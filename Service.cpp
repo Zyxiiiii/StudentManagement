@@ -50,7 +50,14 @@ void AddStudent()
     system("CLS");
 
     // receive the data
-    StudentNode student = CreateNewStudent();
+    Student student_data = {
+        NOT_ID,
+        (String)malloc(sizeof(char) * 32),
+        '\0',
+        CreateNewLessonList(),
+        (String)malloc(sizeof(char) * 60)
+    };
+    StudentNode student = CreateNewStudentNode(student_data);
     printf("\n\n\n\t\t\t请输入该学生的名字(大于一个字，16个字以内):");
     strcpy_s(student.data.name, 16 * 2, CheckAndGetInput(16 * 2));
     printf("\n\t\t\t请输入该学生的性别(男/女):");
@@ -64,8 +71,10 @@ void AddStudent()
     printf("\n\t\t\t请输入该学生的住址(30字以内):");
     data_keeper = CheckAndGetInput(30 * 2);
     strcpy_s(student.data.address, 30 * 2, data_keeper);
-    
-    AddStudentToList(&student, global_student_list);
+
+    StudentList student_list = *ReadStudent();
+
+    AddStudentToList(&student, &student_list);
 
     StudentInfoWindow();
 }

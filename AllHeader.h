@@ -1,5 +1,17 @@
 #pragma once
 
+#ifndef PUBLIC_FUNCTION_DEF
+
+#define PUBLIC_FUNCTION_DEF
+
+/**
+ * \brief the function replace free to achieve free the ptr save
+ * \param ptr the ptr wait for free
+ */
+void Free(void * ptr);
+
+#endif
+
 #ifndef STRING_DEF
 
 #define STRING_DEF	

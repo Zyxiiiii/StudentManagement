@@ -1,9 +1,7 @@
 ﻿#include "AllHeader.h"
 
 int main(int argc, char** argv)
-{    
-    ReadStudent();
-    
+{   
     IndexWindow();
 
     system("pause");
@@ -12,6 +10,12 @@ int main(int argc, char** argv)
 }
 
 // these is some public function which is not a part of every model
+
+void Free(void* ptr)
+{
+    free(ptr);
+    ptr = NULL;
+}
 
 String* InitStringList(int length)
 {
@@ -30,11 +34,11 @@ void FreeStringList(String* string_list, int length)
     // free the memory of each index of the list
     for (int i = 0; i < length; i++)
     {
-        free(*(string_list + i));
+        Free(*(string_list + i));
     }
 
     // free the memory of the list
-    free(string_list);
+    Free(string_list);
 }
 
 int GetOrderInput()
@@ -45,10 +49,10 @@ int GetOrderInput()
     char order = origin_input[0];
     if (strcmp(origin_input, "") != 0 && (order >= '0' && order < '9'))
     {
-        free(origin_input);
+        Free(origin_input);
         return (int) order - '0';
     }
     printf("\t\t\t请输入正确的命令:");
-    free(origin_input);
+    Free(origin_input);
     GetOrderInput();
 }

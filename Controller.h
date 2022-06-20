@@ -1,6 +1,4 @@
 ﻿#pragma once
-
-
 #ifndef CONTROLLERS_DEF
 
 #define CONTROLLERS_DEF
