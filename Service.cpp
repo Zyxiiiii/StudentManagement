@@ -74,7 +74,24 @@ void AddStudent()
 
     StudentList student_list = *ReadStudent();
 
+    student.data.id = student_list->next == NULL ? 1 : student_list->next->data.id + 1;
+
     AddStudentToList(&student, &student_list);
+
+    // TODO resolve the variable would be override
+    if (WriteStudent(&student_list) == OK)
+    {
+        printf("\n\t\t\t新增学生成功\n\n\t\t\t");
+        system("pause");
+    }
+    else
+    {
+        printf("\n\t\t\t新增学生失败\n\n\t\t\t");
+        system("pause");
+    }
+
+    free(student_list);
+    student_list = NULL;
 
     StudentInfoWindow();
 }

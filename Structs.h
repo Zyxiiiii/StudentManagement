@@ -73,7 +73,7 @@ int StudentCount(StudentList student_list);
  * \param student_list the student list
  * \return write status
  */
-Status WriteStudent(StudentList student_list);
+Status WriteStudent(StudentList* student_list);
 
 /**
  * \brief read the student list data from binary object and set it to the global variable
@@ -113,7 +113,7 @@ Student_Data_Set ParseToModel(StudentSet* students, int size);
  * \brief release the memory of this student
  * \param student the student whose memory will be release
  */
-void ReleaseStudentSetMemory(StudentSet* student);
+void ReleaseStudentSetMemory(StudentSet* student, int size);
 
 /**
  * \brief parse the data read from binary data to ordinary data
@@ -121,7 +121,7 @@ void ReleaseStudentSetMemory(StudentSet* student);
  * \param size the size of the data set
  * \return the student set
  */
-StudentSet ParseToObject(Student_Data_Set student_data_set, int size);
+StudentSet ParseToObject(Student_Data_Set* student_data_set, int size);
 
 /**
  * \brief release the memory of the student data set
@@ -173,5 +173,13 @@ LessonList CreateNewLessonList();
  * \return the number of lessons
  */
 int LessonCount(LessonList lesson_list);
+
+
+/**
+ * \brief insert a node into the list
+ * \param lesson the node is waiting for insert
+ * \param lesson_list the list where the node will insert
+ */
+void AddLessonToList(LessonNode* lesson, LessonList* lesson_list);
 
 #endif // !STUDENT_STRUCT_FUNCTION
