@@ -22,6 +22,7 @@ typedef struct Student
 {
     int id;
     String name;
+    String clazz;
     char sex;
     LessonList lessons;
     String address;
@@ -36,8 +37,9 @@ typedef struct Lesson_Data
 // the model use to save to or read from binary data
 typedef struct Student_Data
 {
-    int id;
+    unsigned long long id;
     char name[32];
+    char clazz[20];
     char sex;
     Lesson_Data lessons[20];
     char address[60];
@@ -93,7 +95,7 @@ void AddStudentToList(StudentNode* student, StudentList* student_list);
  * \param student_list the student list
  * \return a student ptr to the student u want, but if there isn't data match, NULL will be return
  */
-Student* GetStudent(int id, StudentList student_list);
+Student* GetStudent(unsigned long long id, StudentList student_list);
 
 /**
  * \brief init a new student node and return
@@ -105,6 +107,7 @@ StudentNode CreateNewStudentNode(Student student);
 /**
  * \brief parse a ordinary data to data model, tips: this function will free the memory of the param students, don't use it after that
  * \param students the student set which will parse to data model, after this function running, this variable will be free
+ * \param size declare the memory size the model need
  * \return the parse result for ordinary data
  */
 Student_Data_Set ParseToModel(StudentSet* students, int size);
@@ -112,6 +115,7 @@ Student_Data_Set ParseToModel(StudentSet* students, int size);
 /**
  * \brief release the memory of this student
  * \param student the student whose memory will be release
+ * \param size control the memory size to be free
  */
 void ReleaseStudentSetMemory(StudentSet* student, int size);
 
@@ -136,6 +140,12 @@ void ReleaseStudentDataSetMemory(Student_Data_Set*  student_data);
  */
 StudentSet CreateStudentSet(int size);
 
+/**
+ * \brief remove a student in the list
+ * \param id the student index in the list
+ * \param student_list the student list
+ */
+Status RemoveStudent(unsigned long long id, StudentList* student_list);
 
 /**
  * \brief create a new student data set and return
@@ -152,7 +162,7 @@ Student_Data_Set CreateStudentDataSet(int size);
  * \param lesson_name the name of the lesson
  * \param score the score
  */
-void SetLessonScore(int student_id, String lesson_name, float score);
+void SetLessonScore(unsigned long long student_id, String lesson_name, float score);
 
 /**
  * \brief get someone score by the student's id and the lesson name
@@ -160,7 +170,7 @@ void SetLessonScore(int student_id, String lesson_name, float score);
  * \param lesson_name the name of the lesson
  * \return the score
  */
-float GetLessonScore(int student_id, String lesson_name);
+float GetLessonScore(unsigned long long student_id, String lesson_name);
 
 /**
  * \brief create a new lesson list and return

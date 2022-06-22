@@ -25,6 +25,7 @@ void StudentInfoController()
         AddStudent();
         break;
     case 2:
+        DeleteStudent();
         break;
     case 3:
         break;

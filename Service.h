@@ -5,9 +5,14 @@
 #define SERVICE_DEF
 
 /**
- * \brief handle the service that add student to data
+ * \brief handle the service to add student to data
  */
 void AddStudent();
+
+/**
+ * \brief handle the service to delete student
+ */
+void DeleteStudent();
 
 #endif
 

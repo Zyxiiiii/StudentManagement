@@ -1,3 +1,4 @@
+#include <ctime>
 #include <xutility>
 
 #include "AllHeader.h"
@@ -119,6 +120,8 @@ StudentList* ReadStudent()
             student_node->data.id = student_set->id;
             student_node->data.name = (String)malloc(sizeof(char) * (strlen(student_set->name) + 1));
             strcpy_s(student_node->data.name, strlen(student_set->name) + 1, student_set->name);
+            student_node->data.clazz = (String)malloc(sizeof(char) * (strlen(student_set->clazz) + 1));
+            strcpy_s(student_node->data.clazz, strlen(student_set->clazz) + 1, student_set->clazz);
             student_node->data.lessons = CreateNewLessonList();
             LessonList lesson_ptr = student_set->lessons->next;
             while (lesson_ptr != NULL)
@@ -158,7 +161,6 @@ StudentList* ReadStudent()
     InitStudentList(&new_student_list);
     return &new_student_list;
 }
-
 
 void SetLessonScore(Student* student, String lesson_name, float score)
 {
@@ -213,6 +215,7 @@ void InitStudentList(StudentList* student_list)
     (*student_list)->data = {
         NOT_ID,
         NULL,
+        NULL,
         '\0',
         NULL,
         NULL
@@ -239,7 +242,7 @@ void AddStudentToList(StudentNode* student, StudentList* student_list)
     (*student_list)->next = student;
 }
 
-Student* GetStudent(int id, StudentList* student_list)
+Student* GetStudent(unsigned long long id, StudentList* student_list)
 {
     StudentList* tmp_ptr = student_list;
     while ((*student_list)->next != NULL)
@@ -268,6 +271,7 @@ Student_Data_Set ParseToModel(StudentSet* students, int size)
     {
         student_data[i].id = student_ptr[i].id;
         strcpy_s(student_data[i].name, strlen(student_ptr[i].name) + 1, student_ptr[i].name);
+        strcpy_s(student_data[i].clazz, strlen(student_ptr[i].clazz) + 1, student_ptr[i].clazz);
         student_data[i].sex = student_ptr[i].sex;
         int count = 0;
         LessonNode* lesson_ptr = (*students)[i].lessons->next;
@@ -309,6 +313,11 @@ void ReleaseStudentSetMemory(StudentSet* student, int size)
             free(student_ptr->name);
             student_ptr->name = NULL;
         }
+        if (student_ptr->clazz != NULL)
+        {
+            free(student_ptr->clazz);
+            student_ptr->clazz = NULL;
+        }
         if (student_ptr->lessons != NULL)
         {
             LessonNode* lesson_ptr = NULL;
@@ -347,6 +356,8 @@ StudentSet ParseToObject(Student_Data_Set* student_data_set, int size)
         student_set[i].id = data_ptr[i].id;
         student_set[i].name = (String)malloc(sizeof(char) * (strlen(data_ptr[i].name) + 1));
         strcpy_s(student_set[i].name, strlen(data_ptr[i].name) + 1, data_ptr[i].name);
+        student_set[i].clazz = (String)malloc(sizeof(char) * (strlen(data_ptr[i].clazz) + 1));
+        strcpy_s(student_set[i].clazz, strlen(data_ptr[i].clazz) + 1, data_ptr[i].clazz);
         student_set[i].sex = data_ptr[i].sex;
         int count = 0;
         student_set[i].lessons = CreateNewLessonList();
@@ -387,6 +398,29 @@ StudentSet CreateStudentSet(int size)
         student_set->id = NOT_ID;
     }
     return student_set;
+}
+
+Status RemoveStudent(unsigned long long id, StudentList* student_list)
+{
+    // get the head node
+    StudentNode* student_ptr = *student_list;
+    // compare the next node's id with it
+    // if match, set the next node of the next node to this node's next
+    // otherwise, let the pointer move to the next node
+    // until the next node of the node which the pointer point to is null
+    while (student_ptr->next != NULL)
+    {
+        if (student_ptr->next->data.id == id)
+        {
+            StudentNode* tmp_ptr = student_ptr->next;
+            student_ptr->next = tmp_ptr->next;
+            tmp_ptr->next = NULL;
+            tmp_ptr = NULL;
+            return OK;
+        }
+        student_ptr = student_ptr->next;
+    }
+    return EXCEPTION;
 }
 
 int LessonCount(LessonList lesson_list)

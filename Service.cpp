@@ -44,7 +44,6 @@ String CheckAndGetInput(int size)
     return CheckAndGetInput(size);
 }
 
-
 void AddStudent()
 {
     system("CLS");
@@ -53,6 +52,7 @@ void AddStudent()
     Student student_data = {
         NOT_ID,
         (String)malloc(sizeof(char) * 32),
+        (String)malloc(sizeof(char) * 20),
         '\0',
         CreateNewLessonList(),
         (String)malloc(sizeof(char) * 60)
@@ -60,6 +60,8 @@ void AddStudent()
     StudentNode student = CreateNewStudentNode(student_data);
     printf("\n\n\n\t\t\t请输入该学生的名字(大于一个字，16个字以内):");
     strcpy_s(student.data.name, 16 * 2, CheckAndGetInput(16 * 2));
+    printf("\n\t\t\t请输入该学生的班别(格式为英文缩写+年级+班号):");
+    strcpy_s(student.data.clazz, 20, CheckAndGetInput(20));
     printf("\n\t\t\t请输入该学生的性别(男/女):");
     String data_keeper = CheckAndGetInput(3);
     while (strcmp(data_keeper, "男") != 0 && strcmp(data_keeper, "女") != 0)
@@ -78,7 +80,6 @@ void AddStudent()
 
     AddStudentToList(&student, &student_list);
 
-    // TODO resolve the variable would be override
     if (WriteStudent(&student_list) == OK)
     {
         printf("\n\t\t\t新增学生成功\n\n\t\t\t");
@@ -92,6 +93,55 @@ void AddStudent()
 
     free(student_list);
     student_list = NULL;
+
+    StudentInfoWindow();
+}
+
+void DeleteStudent()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入想要删除的学生id(请不要输入非数字的字符, 因为那将视为id的结束符):");
+    // check input
+    String input_check = CheckAndGetInput(15);
+    char id_str[15] = {0};
+    for (int i = 0; i < 16; i++)
+    {
+        if (14 == i)
+        {
+            id_str[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            id_str[i] = input_check[i];
+        }
+        else
+        {
+            id_str[i] = '\0';
+            break;
+        }
+    }
+    int size = strlen(id_str);
+    unsigned long long id = 0L;
+    for (int i = 0; i < size; i++)
+    {
+        id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+    }
+
+    StudentList* student_list = ReadStudent();
+
+    if (RemoveStudent(id, student_list) == OK && WriteStudent(student_list) == OK)
+    {
+        printf("\n\t\t\t删除学生信息成功!");
+        system("pause");
+    }
+    else
+    {
+        printf("\n\t\t\t删除学生信息失败!\n\n请检查输入的id是否正确");
+        system("pause");
+    }
 
     StudentInfoWindow();
 }
