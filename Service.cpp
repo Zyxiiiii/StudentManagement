@@ -74,7 +74,7 @@ void AddStudent()
 
     StudentList student_list = *ReadStudent();
 
-    student.data.id = student_list->next == NULL ? 1 : student_list->next->data.id + 1;
+    student.data.id = StudentCount(student_list) + 1;
 
     AddStudentToList(&student, &student_list);
 

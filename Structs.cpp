@@ -82,7 +82,8 @@ StudentList* ReadStudent()
     errno_t err = fopen_s(&file, STUDENT_BINARY_OBJ, "rb");
     if (err != 0)
     {
-        fclose(file);
+        if (file != NULL)
+            fclose(file);
         if ((err = fopen_s(&file, STUDENT_BINARY_OBJ, "w")) != 0)
         {
             fclose(file);

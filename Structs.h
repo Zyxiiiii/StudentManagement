@@ -128,6 +128,7 @@ StudentSet ParseToObject(Student_Data_Set* student_data_set, int size);
  * \param student_data the data set whose memory will be release
  */
 void ReleaseStudentDataSetMemory(Student_Data_Set*  student_data);
+
 /**
  * \brief create a new student set and return
  * \param size declare the size of the new set
