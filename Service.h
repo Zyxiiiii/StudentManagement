@@ -24,5 +24,10 @@ void SearchStudent();
  */
 void ShowAllStudent();
 
+/**
+ * \brief update a student info
+ */
+void UpdateStudentInfo();
+
 #endif
 

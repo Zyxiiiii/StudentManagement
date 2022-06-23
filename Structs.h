@@ -30,8 +30,8 @@ typedef struct Student
 
 typedef struct Lesson_Data
 {
- char name[30];
- float score;
+    char name[30];
+    float score;
 }* Lesson_Data_Set;
 
 // the model use to save to or read from binary data
@@ -53,6 +53,31 @@ typedef struct StudentNode
     StudentNode* next;
 }* StudentList;
 
+// use to declare the data type of the payload
+enum DataType
+{
+    NAME=1,
+    CLASS=2,
+    SEX=3,
+    LESSON=4,
+    ADDRESS=5
+};
+
+// use to load different data type
+union Data
+{
+    String str_data;
+    char char_data;
+    Lesson lesson_data;
+};
+
+// use to build a update request
+struct UpdateRequest
+{
+    unsigned long long id;
+    DataType dataType;
+    Data data;
+};
 
 
 #endif
@@ -131,7 +156,7 @@ StudentSet ParseToObject(Student_Data_Set* student_data_set, int size);
  * \brief release the memory of the student data set
  * \param student_data the data set whose memory will be release
  */
-void ReleaseStudentDataSetMemory(Student_Data_Set*  student_data);
+void ReleaseStudentDataSetMemory(Student_Data_Set* student_data);
 
 /**
  * \brief create a new student set and return
@@ -158,11 +183,12 @@ Student_Data_Set CreateStudentDataSet(int size);
 
 /**
  * \brief set a score by student's id and lesson name
- * \param student_id student id
+ * \param student the student
  * \param lesson_name the name of the lesson
  * \param score the score
+ * \return the change status
  */
-void SetLessonScore(unsigned long long student_id, String lesson_name, float score);
+Status SetLessonScore(Student* student, String lesson_name, float score);
 
 /**
  * \brief get someone score by the student's id and the lesson name
@@ -211,5 +237,11 @@ void ShowStudent(Student student);
  * \param student_list the student list will be free
  */
 void ReleaseStudentListMemory(StudentList* student_list);
+
+/**
+ * \brief free the memory of the request
+ * \param request the request is waiting for free
+ */
+void ReleaseRequestMemory(UpdateRequest* request);
 
 #endif // !STUDENT_STRUCT_FUNCTION

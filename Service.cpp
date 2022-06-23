@@ -62,14 +62,14 @@ void AddStudent()
     strcpy_s(student.data.name, 16 * 2, CheckAndGetInput(16 * 2));
     printf("\n\t\t\t请输入该学生的班别(格式为英文缩写+年级+班号):");
     strcpy_s(student.data.clazz, 20, CheckAndGetInput(20));
-    printf("\n\t\t\t请输入该学生的性别(男/女):");
-    String data_keeper = CheckAndGetInput(3);
-    while (strcmp(data_keeper, "男") != 0 && strcmp(data_keeper, "女") != 0)
+    String data_keeper;
+    do
     {
         printf("\n\t\t\t请输入正确的性别(男/女):");
         data_keeper = CheckAndGetInput(3);
     }
-    student.data.sex = strcmp(data_keeper, "男") == 0 ? MAN : WOMEN;
+    while (strcmp(data_keeper, "男") != 0 && strcmp(data_keeper, "女") != 0);
+    student.data.sex = strcmp(data_keeper, "女") == 0 ? WOMEN : MAN;
     printf("\n\t\t\t请输入该学生的住址(30字以内):");
     data_keeper = CheckAndGetInput(30 * 2);
     strcpy_s(student.data.address, 30 * 2, data_keeper);
@@ -234,6 +234,188 @@ void ShowAllStudent()
         student_list = NULL;
     }
 
+    printf("\n\t\t\t");
+
+    system("pause");
+
+    StudentInfoWindow();
+}
+
+void UpdateStudentInfo()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入想要修改的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+    // build the update request body
+    String input_check = CheckAndGetInput(15);
+    char id_str[15] = {0};
+    for (int i = 0; i < 16; i++)
+    {
+        if (14 == i)
+        {
+            id_str[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            id_str[i] = input_check[i];
+        }
+        else
+        {
+            id_str[i] = '\0';
+            break;
+        }
+    }
+    int size = strlen(id_str);
+    UpdateRequest* request = (UpdateRequest*)malloc(sizeof(UpdateRequest));
+    request->id = 0;
+    for (int i = 0; i < size; i++)
+    {
+        request->id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+    }
+
+    printf("\n\t\t\t1. 姓名");
+    printf("\n\n\t\t\t2. 班别");
+    printf("\n\n\t\t\t3. 性别");
+    printf("\n\n\t\t\t4. 课程");
+    printf("\n\n\t\t\t5. 住址");
+    printf("\n\n\t\t\t请输入想要修改的信息:");
+
+    int order;
+    do
+    {
+        order = GetOrderInput();
+    }
+    while (order > 5 || order <= 0);
+
+    request->dataType = (DataType)order;
+
+    switch (order)
+    {
+    // handle the different order
+    case NAME:
+        {
+            printf("\n\n\t\t\t请输入该学生的名字(大于一个字，16个字以内):");
+            request->data.str_data = (String)malloc(sizeof(char) * 16 * 2);
+            strcpy_s(request->data.str_data, 16 * 2, CheckAndGetInput(16 * 2));
+            break;
+        }
+    case CLASS:
+        {
+            printf("\n\n\t\t\t请输入该学生的班别(格式为英文缩写+年级+班号):");
+            request->data.str_data = (String)malloc(sizeof(char) * 20);
+            strcpy_s(request->data.str_data, 20, CheckAndGetInput(20));
+            break;
+        }
+    case SEX:
+        {
+            String data_keeper;
+            do
+            {
+                printf("\n\n\t\t\t请输入正确的性别(男/女):");
+                data_keeper = CheckAndGetInput(3);
+            }
+            while (strcmp(data_keeper, "男") != 0 && strcmp(data_keeper, "女") != 0);
+            request->data.char_data = strcmp(data_keeper, "男") == 0 ? MAN : WOMEN;
+            break;
+        }
+    case LESSON:
+        {
+            printf("\n\n\t\t\t请输入该课程的课程名:");
+            request->data.lesson_data = {(String)malloc(sizeof(char) * 30), -1};
+            strcpy_s(request->data.lesson_data.name, 30, CheckAndGetInput(30));
+            printf("\n\t\t\t请输入该课程的分数(请不要输入非数字, 且最大为3位数):");
+            String input_check = CheckAndGetInput(3);
+            char score_payload[4] = {0};
+            for (int i = 0; i < 4; i++)
+            {
+                if (3 == i)
+                {
+                    score_payload[i] = '\0';
+                    break;
+                }
+                int num = input_check[i] - '0';
+                if (num >= 0 && num <= 9)
+                {
+                    score_payload[i] = input_check[i];
+                }
+                else
+                {
+                    score_payload[i] = '\0';
+                    break;
+                }
+            }
+            int size = strlen(score_payload);
+            request->data.lesson_data.score = 0;
+            for (int i = 0; i < size; i++)
+            {
+                request->data.lesson_data.score += (int)((score_payload[i] - '0') * pow(10, size - i - 1));
+            }
+            break;
+        }
+    case ADDRESS:
+        {
+            printf("\n\t\t\t请输入该学生的住址(30字以内):");
+            request->data.str_data = (String)malloc(sizeof(char) * 30 * 2);
+            strcpy_s(request->data.str_data, 30 * 2, CheckAndGetInput(30 * 2));
+            break;
+        }
+    default:
+        {
+            printf("\n\t\t\t数据异常, 请重试");
+            printf("\n\n\t\t\t");
+            system("pause");
+            if (request != NULL)
+                ReleaseRequestMemory(request);
+            StudentInfoWindow();
+        }
+    }
+
+    StudentList* student_list = ReadStudent();
+
+    Student* student = GetStudent(request->id, *student_list);
+
+    switch (request->dataType)
+    {
+    case NAME:
+        strcpy_s(student->name, strlen(request->data.str_data) + 1, request->data.str_data);
+        break;
+    case CLASS:
+        strcpy_s(student->clazz, strlen(request->data.str_data) + 1, request->data.str_data);
+        break;
+    case SEX:
+        student->sex = request->data.char_data;
+        break;
+    case LESSON:
+        if (*student_list != NULL)
+        {
+            ReleaseStudentListMemory(student_list);
+        }
+
+        if (SetLessonScore(student, request->data.lesson_data.name, request->data.lesson_data.score) != OK)
+        {
+            // handle the exception
+            printf("\n\t\t\t没有找到这门课噢!");
+            printf("\n\n\t\t\t请重试");
+            return StudentInfoWindow();
+        }
+        break;
+    case ADDRESS:
+        strcpy_s(student->address, strlen(request->data.str_data) + 1, request->data.str_data);
+        break;
+    }
+
+    WriteStudent(student_list);
+
+    if (*student_list != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+    }
+
+    printf("\n\n\t\t\t修改学生数据成功!");
+
+    printf("\n\n\t\t\t");
     system("pause");
 
     StudentInfoWindow();

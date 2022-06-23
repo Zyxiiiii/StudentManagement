@@ -31,6 +31,7 @@ void StudentInfoController()
         SearchStudent();
         break;
     case 4:
+        UpdateStudentInfo();
         break;
     case 5:
         ShowAllStudent();

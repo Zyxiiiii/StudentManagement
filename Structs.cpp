@@ -162,7 +162,7 @@ StudentList* ReadStudent()
     return &new_student_list;
 }
 
-void SetLessonScore(Student* student, String lesson_name, float score)
+Status SetLessonScore(Student* student, String lesson_name, float score)
 {
     LessonNode* lesson_ptr = student->lessons->next;
     do
@@ -171,13 +171,13 @@ void SetLessonScore(Student* student, String lesson_name, float score)
         {
             lesson_ptr->data.score = score;
             lesson_ptr = NULL;
-            return;
+            return OK;
         }
         lesson_ptr = lesson_ptr->next;
     }
     while (lesson_ptr->next != NULL);
     lesson_ptr = NULL;
-    printf("\n\t\t\t没有找到[%s]这门课噢!", lesson_name);
+    return EXCEPTION;
 }
 
 float GetLessonScore(Student* student, String lesson_name)
@@ -504,6 +504,41 @@ void ReleaseStudentListMemory(StudentList* student_list)
         tmp = NULL;
     }
     student_ptr = NULL;
+}
+
+void ReleaseRequestMemory(UpdateRequest* request)
+{
+    switch (request->dataType)
+    {
+    case NAME:
+        if (request->data.str_data != NULL)
+        {
+            free(request->data.str_data);
+            request->data.str_data = NULL;
+        }
+        break;
+    case CLASS:
+        if (request->data.str_data != NULL)
+        {
+            free(request->data.str_data);
+            request->data.str_data = NULL;
+        }
+        break;
+    case LESSON:
+        if (request->data.lesson_data.name != NULL)
+        {
+            free(request->data.lesson_data.name);
+            request->data.lesson_data.name = NULL;
+        }
+        break;
+    case ADDRESS:
+        if (request->data.str_data != NULL)
+        {
+            free(request->data.str_data);
+            request->data.str_data = NULL;
+        }
+        break;
+    }
 }
 
 int GetMaxId(StudentList student_list)
