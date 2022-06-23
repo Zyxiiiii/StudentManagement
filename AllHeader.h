@@ -29,6 +29,8 @@ void FreeStringList(String* string_list, int length);
 
 typedef int Status;
 
+typedef int Bool;
+
 #define OK 0
 
 #define ERROR (-1)
@@ -40,6 +42,10 @@ typedef int Status;
 #define MAN 'm'
 
 #define WOMEN 'f'
+
+#define TRUE 1
+
+#define FALSE 0
 
 #endif // !CONSTANT_DEF
 

@@ -45,7 +45,6 @@ typedef struct Student_Data
     char address[60];
 }* Student_Data_Set;
 
-
 // the student node
 typedef struct StudentNode
 {
@@ -79,6 +78,15 @@ struct UpdateRequest
     Data data;
 };
 
+typedef struct SortLessonNode
+{
+    String student_name;
+    String lesson_name;
+    float score;
+    SortLessonNode* next;
+}* SortLessonList;
+
+enum DisplayMode { ASC, DESC };
 
 #endif
 
@@ -243,5 +251,50 @@ void ReleaseStudentListMemory(StudentList* student_list);
  * \param request the request is waiting for free
  */
 void ReleaseRequestMemory(UpdateRequest* request);
+
+/**
+ * \brief insert a node into a list
+ * \param sort_lesson_node a node of the sorting list
+ * \param sort_lesson_list a list which will be inserted
+ */
+void AddSortingNodeToList(SortLessonNode* sort_lesson_node, SortLessonList* sort_lesson_list);
+
+/**
+ * \brief display the sorting list by mode
+ * \param sort_lesson_list a list will be sorting
+ * \param display_mode the display mode: ASC -- display by original sort; DESC -- display by reverse sort
+ */
+void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode);
+
+/**
+ * \brief reverse the list sort
+ * \param sort_lesson_list the target list
+ */
+void ReverseTheSortingList(SortLessonList* sort_lesson_list);
+
+/**
+ * \brief count the list node number and return the count(exclude the head node)
+ * \param sort_lesson_list the target list
+ * \return the node count of the list
+ */
+int CountTheSortingList(SortLessonList sort_lesson_list);
+
+/**
+ * \brief init a new list by declared size and return
+ * \return a new list
+ */
+SortLessonList* CreateNewSortingList();
+
+/**
+ * \brief init a new node and return
+ * \return a new node
+ */
+SortLessonNode* CreateNewSoringNode();
+
+/**
+ * \brief free the size of the list
+ * \param sort_lesson_list the list is waiting for releasing
+ */
+void ReleaseTheSortingList(SortLessonList* sort_lesson_list);
 
 #endif // !STUDENT_STRUCT_FUNCTION

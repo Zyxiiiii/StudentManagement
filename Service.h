@@ -29,5 +29,10 @@ void ShowAllStudent();
  */
 void UpdateStudentInfo();
 
+/**
+ * \brief search all score and show
+ */
+void SearchAllScore();
+
 #endif
 

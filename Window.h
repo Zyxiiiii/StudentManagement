@@ -15,4 +15,9 @@ void IndexWindow();
  */
 void StudentInfoWindow();
 
+/**
+ * \brief the score manager window
+ */
+void ScoreManagerWindow();
+
 #endif // !MAIN_WINDOW_DEF

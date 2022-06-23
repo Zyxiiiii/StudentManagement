@@ -420,3 +420,32 @@ void UpdateStudentInfo()
 
     StudentInfoWindow();
 }
+
+void SearchAllScore()
+{
+    system("CLS");
+
+    StudentList* student_list = ReadStudent();
+
+    StudentNode* student_ptr = *student_list;
+
+    Bool has_class = FALSE;
+
+    while (student_ptr->next != NULL)
+    {
+        printf("\n\n\t\t\t%s的成绩为:", student_ptr->next->data.name);
+        LessonNode* lesson_ptr = student_ptr->next->data.lessons;
+        while (lesson_ptr->next != NULL)
+        {
+            has_class = TRUE;
+            printf("\n\t\t\t%s: %.1f分", lesson_ptr->next->data.name, lesson_ptr->next->data.score);
+            lesson_ptr = lesson_ptr->next;
+        }
+        student_ptr = student_ptr->next;
+    }
+
+    if (!has_class)
+    {
+        printf("\n\n\t\t\t目前没有任何课程成绩噢");
+    }
+}

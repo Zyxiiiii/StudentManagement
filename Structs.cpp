@@ -541,6 +541,110 @@ void ReleaseRequestMemory(UpdateRequest* request)
     }
 }
 
+void AddSortingNodeToList(SortLessonNode* sort_lesson_node, SortLessonList* sort_lesson_list)
+{
+    sort_lesson_node->next = (*sort_lesson_list)->next;
+    (*sort_lesson_list)->next = sort_lesson_node;
+}
+
+void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
+{
+    // reverse or not
+    if (display_mode == DESC)
+    {
+        ReverseTheSortingList(sort_lesson_list);
+    }
+
+    // display the list
+    SortLessonNode* work_ptr = *sort_lesson_list;
+    printf("\t\t学生名\t\t课程名\t\t分数");
+    while (work_ptr->next != NULL)
+    {
+        printf("\n\n\t\t%s\t\t%s\t\t%.1f", work_ptr->student_name, work_ptr->lesson_name, work_ptr->score);
+        work_ptr = work_ptr->next;
+    }
+
+    // free the memory
+    if (sort_lesson_list != NULL)
+    {
+        ReleaseTheSortingList(sort_lesson_list);
+    }
+}
+
+void ReverseTheSortingList(SortLessonList* sort_lesson_list)
+{
+    // init a new list, the size is the count of old list(because of it has head node, so its size must to plus one on original count)
+    SortLessonList* reverse_sort_lesson_list = CreateNewSortingList();
+    SortLessonNode* tmp_ptr;
+    while ((*sort_lesson_list)->next != NULL)
+    {
+        // record the first effect node of the list as tmp_node
+        tmp_ptr = (*sort_lesson_list)->next;
+        // let the next node pointer of the head node of the original list point to the second node
+        (*sort_lesson_list)->next = tmp_ptr->next;
+        // the next node pointer of the tmp_node of the original list point to the first node of the new list
+        tmp_ptr->next = (*reverse_sort_lesson_list)->next;
+        // at last, the next node pointer of the head node of the new list point to 
+        (*reverse_sort_lesson_list)->next = tmp_ptr;
+    }
+    (*sort_lesson_list)->next = (*reverse_sort_lesson_list)->next;
+    (*reverse_sort_lesson_list)->next = NULL;
+}
+
+int CountTheSortingList(SortLessonList sort_lesson_list)
+{
+    int count = 0;
+    SortLessonNode* sorting_ptr = sort_lesson_list->next;
+    while (sorting_ptr != NULL)
+    {
+        count++;
+        sorting_ptr = sorting_ptr->next;
+    }
+    return count;
+}
+
+SortLessonList* CreateNewSortingList()
+{
+    SortLessonList sort_lesson_list = (SortLessonList)malloc(sizeof(SortLessonNode));
+    sort_lesson_list->next = NULL;
+    sort_lesson_list->student_name = NULL;
+    sort_lesson_list->lesson_name = NULL;
+    sort_lesson_list->score = -1;
+    return &sort_lesson_list;
+}
+
+SortLessonNode* CreateNewSoringNode()
+{
+    SortLessonNode* sort_lesson_node = (SortLessonNode*)malloc(sizeof(SortLessonNode));
+    sort_lesson_node->lesson_name = (String)malloc(sizeof(char) * 30);
+    sort_lesson_node->student_name = (String)malloc(sizeof(char) * 32);
+    return sort_lesson_node;
+}
+
+void ReleaseTheSortingList(SortLessonList* sort_lesson_list)
+{
+    if (*sort_lesson_list != NULL)
+    {
+        SortLessonNode* work_ptr = (*sort_lesson_list)->next;
+        while (work_ptr != NULL)
+        {
+            if (work_ptr->student_name != NULL)
+            {
+                free(work_ptr->student_name);
+                work_ptr->student_name = NULL;
+            }
+            if (work_ptr->lesson_name != NULL)
+            {
+                free(work_ptr->lesson_name);
+                work_ptr->lesson_name = NULL;
+            }
+            work_ptr = work_ptr->next;
+        }
+        free(*sort_lesson_list);
+        *sort_lesson_list = NULL;
+    }
+}
+
 int GetMaxId(StudentList student_list)
 {
     unsigned long long max = NOT_ID;

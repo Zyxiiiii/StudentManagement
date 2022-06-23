@@ -44,3 +44,23 @@ void StudentInfoController()
         StudentInfoController();
     }
 }
+
+void ScoreManagerController()
+{
+    switch (GetOrderInput())
+    {
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    default:
+        printf("\t\t\t请输入正确的命令:");
+        ScoreManagerController();
+    }
+}

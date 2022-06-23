@@ -53,3 +53,18 @@ void StudentInfoWindow()
 
     StudentInfoController();
 }
+
+void ScoreManagerWindow()
+{
+    String* body = InitStringList(4);
+
+    // assign value to body
+    strcpy_s(*(body), 20, "查询所有学生的成绩");
+    strcpy_s(*(body + 1), 20, "查询单一学生的成绩");
+    strcpy_s(*(body + 2), 30, "查询单一科目的所有学生成绩");
+    strcpy_s(*(body + 3), 20, "修改学生成绩");
+
+    MainWindow(body, 4);
+
+    ScoreManagerController();
+}
