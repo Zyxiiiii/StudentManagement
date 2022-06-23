@@ -101,7 +101,7 @@ void DeleteStudent()
 {
     system("CLS");
 
-    printf("\n\n\t\t\t请输入想要删除的学生id(请不要输入非数字的字符, 因为那将视为id的结束符):");
+    printf("\n\n\t\t\t请输入想要删除的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
     // check input
     String input_check = CheckAndGetInput(15);
     char id_str[15] = {0};
@@ -134,14 +134,66 @@ void DeleteStudent()
 
     if (EnsuretheOparation() == YES && RemoveStudent(id, student_list) == OK && WriteStudent(student_list) == OK)
     {
-        printf("\n\t\t\t删除学生信息成功!");
+        printf("\n\t\t\t删除学生信息成功!\n\t\t\t");
         system("pause");
     }
     else
     {
-        printf("\n\t\t\t删除学生信息失败!\n\n\t\t\t请检查输入的id是否正确");
+        printf("\n\t\t\t删除学生信息失败!\n\n\t\t\t请检查输入的id是否正确\n\t\t\t");
         system("pause");
     }
+
+    StudentInfoWindow();
+}
+
+void SearchStudent()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入想要查询的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+    // check input
+    String input_check = CheckAndGetInput(15);
+    char id_str[15] = {0};
+    for (int i = 0; i < 16; i++)
+    {
+        if (14 == i)
+        {
+            id_str[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            id_str[i] = input_check[i];
+        }
+        else
+        {
+            id_str[i] = '\0';
+            break;
+        }
+    }
+    int size = strlen(id_str);
+    unsigned long long id = 0L;
+    for (int i = 0; i < size; i++)
+    {
+        id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+    }
+
+    StudentList* student_list = ReadStudent();
+
+    Student* student = GetStudent(id, *student_list);
+
+    if (student != NULL)
+    {
+        ShowStudent(*student);
+    }
+    else
+    {
+        printf("\n\t\t\t未找到该学生信息...");
+    }
+
+    printf("\n\t\t\t");
+    system("pause");
 
     StudentInfoWindow();
 }

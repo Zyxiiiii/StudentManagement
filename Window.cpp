@@ -40,15 +40,16 @@ void IndexWindow()
 
 void StudentInfoWindow()
 {
-    String* body = InitStringList(4);
+    String* body = InitStringList(5);
 
     // assign value to body
     strcpy_s(*(body), 20, "新增学生");
     strcpy_s(*(body + 1), 20, "删除学生");
     strcpy_s(*(body + 2), 20, "查询学生信息");
     strcpy_s(*(body + 3), 20, "修改学生信息");
+    strcpy_s(*(body + 4), 20, "查看所有学生信息");
 
-    MainWindow(body, 4);
+    MainWindow(body, 5);
 
     StudentInfoController();
 }

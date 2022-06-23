@@ -28,10 +28,13 @@ void StudentInfoController()
         DeleteStudent();
         break;
     case 3:
+        SearchStudent();
         break;
     case 4:
         break;
     case 5:
+        break;
+    case 6:
         IndexWindow();
         break;
     default:

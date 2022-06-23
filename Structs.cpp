@@ -242,15 +242,16 @@ void AddStudentToList(StudentNode* student, StudentList* student_list)
     (*student_list)->next = student;
 }
 
-Student* GetStudent(unsigned long long id, StudentList* student_list)
+Student* GetStudent(unsigned long long id, StudentList student_list)
 {
-    StudentList* tmp_ptr = student_list;
-    while ((*student_list)->next != NULL)
+    while (student_list->next != NULL)
     {
-        if ((*tmp_ptr)->data.id == id)
+        if (student_list->next->data.id == id)
         {
-            return &(*tmp_ptr)->data;
+            Student student = student_list->next->data;
+            return &student;
         }
+        student_list = student_list->next;
     }
     return NULL;
 }
@@ -437,6 +438,31 @@ void AddLessonToList(LessonNode* lesson, LessonList* lesson_list)
 {
     lesson->next = (*lesson_list)->next;
     (*lesson_list)->next = lesson;
+}
+
+void ShowStudent(Student student)
+{
+    printf("\n\n\t\t\t学号: %llu", student.id);
+    printf("\n\t\t\t姓名: %s", student.name);
+    printf("\n\t\t\t班别: %s", student.clazz);
+    char sex[3];
+    strcpy_s(sex, 3, student.sex == 'm' ? "男" : "女");
+    printf("\n\t\t\t性别: %s", sex);
+    printf("\n\t\t\t住址: %s", student.address);
+    if (student.lessons->next == NULL)
+    {
+        printf("\n\t\t\t该学生当前没有课程\n");
+    }
+    else
+    {
+        printf("\n\t\t\t该学生当前的所有课程:");
+        LessonNode* lesson_ptr = student.lessons;
+        while (lesson_ptr->next != NULL)
+        {
+            printf("\n\t\t\t\t课程名: %s", lesson_ptr->next->data.name);
+            printf("\n\t\t\t\t成绩: %d", lesson_ptr->next->data.score);
+        }
+    }
 }
 
 int GetMaxId(StudentList student_list)

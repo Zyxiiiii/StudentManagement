@@ -200,4 +200,10 @@ int LessonCount(LessonList lesson_list);
  */
 void AddLessonToList(LessonNode* lesson, LessonList* lesson_list);
 
+/**
+ * \brief display the data of this student 
+ * \param student a student data
+ */
+void ShowStudent(Student student);
+
 #endif // !STUDENT_STRUCT_FUNCTION

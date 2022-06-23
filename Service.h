@@ -14,5 +14,10 @@ void AddStudent();
  */
 void DeleteStudent();
 
+/**
+ * \brief search student info and show it
+ */
+void SearchStudent();
+
 #endif
 
