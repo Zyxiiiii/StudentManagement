@@ -19,5 +19,10 @@ void DeleteStudent();
  */
 void SearchStudent();
 
+/**
+ * \brief show all the student data
+ */
+void ShowAllStudent();
+
 #endif
 

@@ -465,6 +465,47 @@ void ShowStudent(Student student)
     }
 }
 
+void ReleaseStudentListMemory(StudentList* student_list)
+{
+    StudentNode* student_ptr = *student_list;
+    while (student_ptr != NULL)
+    {
+        if (student_ptr->data.address != NULL)
+        {
+            free(student_ptr->data.address);
+            student_ptr->data.address = NULL;
+        }
+        if (student_ptr->data.name != NULL)
+        {
+            free(student_ptr->data.name);
+            student_ptr->data.name = NULL;
+        }
+        if (student_ptr->data.lessons != NULL)
+        {
+            LessonNode* lesson_ptr = student_ptr->data.lessons->next;
+            while (lesson_ptr != NULL)
+            {
+                if (lesson_ptr->data.name != NULL)
+                {
+                    free(lesson_ptr->data.name);
+                    lesson_ptr->data.name = NULL;
+                }
+                lesson_ptr = lesson_ptr->next;
+            }
+        }
+        if (student_ptr->data.clazz != NULL)
+        {
+            free(student_ptr->data.clazz);
+            student_ptr->data.clazz = NULL;
+        }
+        StudentNode* tmp = student_ptr;
+        student_ptr = student_ptr->next;
+        free(tmp);
+        tmp = NULL;
+    }
+    student_ptr = NULL;
+}
+
 int GetMaxId(StudentList student_list)
 {
     unsigned long long max = NOT_ID;

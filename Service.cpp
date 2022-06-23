@@ -82,17 +82,23 @@ void AddStudent()
 
     if (WriteStudent(&student_list) == OK)
     {
+        if (student_list == NULL)
+        {
+            ReleaseStudentListMemory(&student_list);
+        }
         printf("\n\t\t\t新增学生成功\n\n\t\t\t");
         system("pause");
     }
     else
     {
+        if (student_list == NULL)
+        {
+            ReleaseStudentListMemory(&student_list);
+        }
         printf("\n\t\t\t新增学生失败\n\n\t\t\t");
         system("pause");
     }
 
-    free(student_list);
-    student_list = NULL;
 
     StudentInfoWindow();
 }
@@ -134,14 +140,23 @@ void DeleteStudent()
 
     if (EnsuretheOparation() == YES && RemoveStudent(id, student_list) == OK && WriteStudent(student_list) == OK)
     {
+        if (*student_list != NULL)
+        {
+            ReleaseStudentListMemory(student_list);
+        }
         printf("\n\t\t\t删除学生信息成功!\n\t\t\t");
         system("pause");
     }
     else
     {
+        if (*student_list != NULL)
+        {
+            ReleaseStudentListMemory(student_list);
+        }
         printf("\n\t\t\t删除学生信息失败!\n\n\t\t\t请检查输入的id是否正确\n\t\t\t");
         system("pause");
     }
+
 
     StudentInfoWindow();
 }
@@ -192,7 +207,33 @@ void SearchStudent()
         printf("\n\t\t\t未找到该学生信息...");
     }
 
+    if (*student_list != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+    }
+
     printf("\n\t\t\t");
+    system("pause");
+
+    StudentInfoWindow();
+}
+
+void ShowAllStudent()
+{
+    system("CLS");
+    StudentList* student_list = ReadStudent();
+    while ((*student_list)->next != NULL)
+    {
+        ShowStudent((*student_list)->next->data);
+        *student_list = (*student_list)->next;
+    }
+
+    if ((*student_list) != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+        student_list = NULL;
+    }
+
     system("pause");
 
     StudentInfoWindow();

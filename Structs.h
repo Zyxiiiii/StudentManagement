@@ -206,4 +206,10 @@ void AddLessonToList(LessonNode* lesson, LessonList* lesson_list);
  */
 void ShowStudent(Student student);
 
+/**
+ * \brief free the memory of student list
+ * \param student_list the student list will be free
+ */
+void ReleaseStudentListMemory(StudentList* student_list);
+
 #endif // !STUDENT_STRUCT_FUNCTION

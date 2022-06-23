@@ -33,6 +33,7 @@ void StudentInfoController()
     case 4:
         break;
     case 5:
+        ShowAllStudent();
         break;
     case 6:
         IndexWindow();
