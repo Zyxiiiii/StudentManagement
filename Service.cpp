@@ -19,7 +19,7 @@ String CheckAndGetInput(int size);
 
 Status EnsuretheOparation()
 {
-    printf("\t\t\t确认要执行吗？(0:取消本次操作, 1:确定):");
+    printf("\n\t\t\t确认要执行吗？(0:取消本次操作, 1:确定):");
     switch (GetOrderInput())
     {
     case 0:
@@ -76,7 +76,7 @@ void AddStudent()
 
     StudentList student_list = *ReadStudent();
 
-    student.data.id = StudentCount(student_list) + 1;
+    student.data.id = GetMaxId(student_list) + 1;
 
     AddStudentToList(&student, &student_list);
 
@@ -132,14 +132,14 @@ void DeleteStudent()
 
     StudentList* student_list = ReadStudent();
 
-    if (RemoveStudent(id, student_list) == OK && WriteStudent(student_list) == OK)
+    if (EnsuretheOparation() == YES && RemoveStudent(id, student_list) == OK && WriteStudent(student_list) == OK)
     {
         printf("\n\t\t\t删除学生信息成功!");
         system("pause");
     }
     else
     {
-        printf("\n\t\t\t删除学生信息失败!\n\n请检查输入的id是否正确");
+        printf("\n\t\t\t删除学生信息失败!\n\n\t\t\t请检查输入的id是否正确");
         system("pause");
     }
 

@@ -35,7 +35,7 @@ typedef int Status;
 
 #define EXCEPTION 1
 
-#define NOT_ID (-1)
+#define NOT_ID (0)
 
 #define MAN 'm'
 

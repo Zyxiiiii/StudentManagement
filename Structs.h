@@ -20,7 +20,7 @@ typedef struct LessonNode
 // the student struct
 typedef struct Student
 {
-    int id;
+    unsigned long long id;
     String name;
     String clazz;
     char sex;
@@ -171,6 +171,13 @@ void SetLessonScore(unsigned long long student_id, String lesson_name, float sco
  * \return the score
  */
 float GetLessonScore(unsigned long long student_id, String lesson_name);
+
+/**
+ * \brief find the max id in the student list
+ * \param student_list the base student list
+ * \return the max id in this list
+ */
+int GetMaxId(StudentList student_list);
 
 /**
  * \brief create a new lesson list and return

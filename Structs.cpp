@@ -439,6 +439,18 @@ void AddLessonToList(LessonNode* lesson, LessonList* lesson_list)
     (*lesson_list)->next = lesson;
 }
 
+int GetMaxId(StudentList student_list)
+{
+    unsigned long long max = NOT_ID;
+    while (student_list->next != NULL)
+    {
+        // choose the bigger one between max and the id of next node and assign it to max
+        max = student_list->next->data.id > max ? student_list->next->data.id : max;
+        student_list = student_list->next;
+    }
+    return max;
+}
+
 LessonList CreateNewLessonList()
 {
     LessonList lesson_list = (LessonList)malloc(sizeof(LessonNode));
