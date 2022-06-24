@@ -427,25 +427,103 @@ void SearchAllScore()
 
     StudentList* student_list = ReadStudent();
 
-    StudentNode* student_ptr = *student_list;
+    SortLessonList* sort_lesson_list = ParseToSortingList(student_list);
 
-    Bool has_class = FALSE;
-
-    while (student_ptr->next != NULL)
-    {
-        printf("\n\n\t\t\t%s的成绩为:", student_ptr->next->data.name);
-        LessonNode* lesson_ptr = student_ptr->next->data.lessons;
-        while (lesson_ptr->next != NULL)
-        {
-            has_class = TRUE;
-            printf("\n\t\t\t%s: %.1f分", lesson_ptr->next->data.name, lesson_ptr->next->data.score);
-            lesson_ptr = lesson_ptr->next;
-        }
-        student_ptr = student_ptr->next;
-    }
-
-    if (!has_class)
+    if ((*sort_lesson_list)->next != NULL)
     {
         printf("\n\n\t\t\t目前没有任何课程成绩噢");
+    }
+
+    SortLessonList* result_list = CreateNewSortingList();
+    SortLessonNode* sort_ptr = *sort_lesson_list;
+    while ((*sort_lesson_list)->next != NULL)
+    {
+        SortLessonNode* max_node = NULL;
+        SortLessonNode* prior = NULL;
+        while (sort_ptr->next != NULL)
+        {
+            // each turn will find the node has max score and add it to result list
+            if (max_node->score < sort_ptr->next->score)
+            {
+                max_node = sort_ptr->next;
+                prior = sort_ptr;
+            }
+            sort_ptr = sort_ptr->next;
+        }
+        // let the next pointer of the prior node of the max node point to the next node of the max node
+        prior->next = max_node->next;
+        // let the next pointer of the max node point to null(cut off the relationship between max node and the base list)
+        max_node->next = NULL;
+        // add the max node into the result list
+        AddSortingNodeToList(max_node, result_list);
+    }
+
+    if ((*sort_lesson_list) != NULL)
+    {
+        ReleaseTheSortingList(sort_lesson_list);
+    }
+    sort_ptr = NULL;
+
+    ShowSortingList(result_list, ASC);
+}
+
+void SearchScore()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入想要查询的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+    // check input
+    String input_check = CheckAndGetInput(15);
+    char id_str[15] = {0};
+    for (int i = 0; i < 16; i++)
+    {
+        if (14 == i)
+        {
+            id_str[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            id_str[i] = input_check[i];
+        }
+        else
+        {
+            id_str[i] = '\0';
+            break;
+        }
+    }
+    int size = strlen(id_str);
+    unsigned long long id = 0L;
+    for (int i = 0; i < size; i++)
+    {
+        id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+    }
+
+    StudentList* student_list = ReadStudent();
+
+    Student* student = GetStudent(id, *student_list);
+
+    if (student == NULL)
+    {
+        printf("\n\n\t\t\t没有找到学号为 %llu 的学生的信息...", id);
+        return ScoreManagerWindow();
+    }
+
+    printf("\n\n\t\t\t学号: %llu", student->id);
+
+    if (student->lessons->next == NULL)
+    {
+        printf("\n\t\t\t该学生当前没有课程\n");
+    }
+    else
+    {
+        printf("\n\t\t\t该学生当前的所有课程:");
+        LessonNode* lesson_ptr = student->lessons;
+        while (lesson_ptr->next != NULL)
+        {
+            printf("\n\t\t\t\t课程名: %s", lesson_ptr->next->data.name);
+            printf("\n\t\t\t\t成绩: %d", lesson_ptr->next->data.score);
+        }
     }
 }

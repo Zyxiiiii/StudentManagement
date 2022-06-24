@@ -86,7 +86,7 @@ typedef struct SortLessonNode
     SortLessonNode* next;
 }* SortLessonList;
 
-enum DisplayMode { ASC, DESC };
+enum DisplayMode { ASC=1, DESC=2 };
 
 #endif
 
@@ -289,12 +289,19 @@ SortLessonList* CreateNewSortingList();
  * \brief init a new node and return
  * \return a new node
  */
-SortLessonNode* CreateNewSoringNode();
+SortLessonNode* CreateNewSortingNode();
 
 /**
  * \brief free the size of the list
  * \param sort_lesson_list the list is waiting for releasing
  */
 void ReleaseTheSortingList(SortLessonList* sort_lesson_list);
+
+/**
+ * \brief parse the student list to sorting list
+ * \param student_list the original data list
+ * \return the sorting list
+ */
+SortLessonList* ParseToSortingList(StudentList* student_list);
 
 #endif // !STUDENT_STRUCT_FUNCTION

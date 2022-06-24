@@ -50,6 +50,7 @@ void ScoreManagerController()
     switch (GetOrderInput())
     {
     case 1:
+        SearchAllScore();
         break;
     case 2:
         break;
@@ -58,6 +59,7 @@ void ScoreManagerController()
     case 4:
         break;
     case 5:
+        IndexController();
         break;
     default:
         printf("\t\t\t请输入正确的命令:");

@@ -547,6 +547,7 @@ void AddSortingNodeToList(SortLessonNode* sort_lesson_node, SortLessonList* sort
     (*sort_lesson_list)->next = sort_lesson_node;
 }
 
+// TODO wait for testing
 void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
 {
     // reverse or not
@@ -562,6 +563,19 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
     {
         printf("\n\n\t\t%s\t\t%s\t\t%.1f", work_ptr->student_name, work_ptr->lesson_name, work_ptr->score);
         work_ptr = work_ptr->next;
+    }
+
+    printf("\n\n\t\t\t请输入命令以继续(1. 正序输出; 2. 倒序输出; 3. 退出):");
+    int order = GetOrderInput();
+    while (order < 1 || order > 3)
+    {
+        order = GetOrderInput();
+    }
+    if (order != 3)
+    {
+        // if 'order' is equal to ASC(1), show this list in common again. Otherwise, reverse it and show again
+        system("CLS");
+        ShowSortingList(sort_lesson_list, order == ASC ? ASC : DESC);
     }
 
     // free the memory
@@ -613,7 +627,7 @@ SortLessonList* CreateNewSortingList()
     return &sort_lesson_list;
 }
 
-SortLessonNode* CreateNewSoringNode()
+SortLessonNode* CreateNewSortingNode()
 {
     SortLessonNode* sort_lesson_node = (SortLessonNode*)malloc(sizeof(SortLessonNode));
     sort_lesson_node->lesson_name = (String)malloc(sizeof(char) * 30);
@@ -643,6 +657,38 @@ void ReleaseTheSortingList(SortLessonList* sort_lesson_list)
         free(*sort_lesson_list);
         *sort_lesson_list = NULL;
     }
+}
+
+SortLessonList* ParseToSortingList(StudentList* student_list)
+{
+    StudentNode* student_ptr = *student_list;
+
+    SortLessonList* sort_lesson_list = CreateNewSortingList();
+    while (student_ptr->next != NULL)
+    {
+        if (student_ptr->next->data.lessons->next != NULL)
+        {
+            LessonNode* lesson_ptr = student_ptr->next->data.lessons;
+            while (lesson_ptr->next != NULL)
+            {
+                // package the data into the sorting list
+                SortLessonNode* sorting_node = CreateNewSortingNode();
+                strcpy_s(sorting_node->student_name, strlen(student_ptr->next->data.name) + 1,
+                         student_ptr->next->data.name);
+                strcpy_s(sorting_node->lesson_name, strlen(lesson_ptr->next->data.name) + 1,
+                         lesson_ptr->next->data.name);
+                sorting_node->score = lesson_ptr->next->data.score;
+                AddSortingNodeToList(sorting_node, sort_lesson_list);
+                lesson_ptr = lesson_ptr->next;
+            }
+            student_ptr = student_ptr->next;
+        }
+    }
+    if (student_list != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+    }
+    return sort_lesson_list;
 }
 
 int GetMaxId(StudentList student_list)

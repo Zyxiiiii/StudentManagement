@@ -34,5 +34,11 @@ void UpdateStudentInfo();
  */
 void SearchAllScore();
 
+// todo waiting for test
+/**
+ * \brief search a student's score
+ */
+void SearchScore();
+
 #endif
 
