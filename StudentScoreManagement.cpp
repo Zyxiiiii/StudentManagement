@@ -16,7 +16,7 @@ String* InitStringList(int length)
     for (int i = 0; i < length; i++)
     {
         // malloc each string ptr
-        *(string_list + i) = (String)malloc(sizeof(char) * 20);
+        *(string_list + i) = (String)malloc(sizeof(char) * 30);
     }
     return string_list;
 }

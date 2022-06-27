@@ -38,7 +38,19 @@ void SearchAllScore();
 /**
  * \brief search a student's score
  */
-void SearchScore();
+void SearchScoreByStudent();
+
+// todo waiting for test
+/**
+ * \brief search the score of some lesson
+ */
+void SearchScoreByLesson();
+
+// todo waiting for test
+void UpdateStudentScore();
+
+// todo waiting for test
+void AddLessonForStudent();
 
 #endif
 

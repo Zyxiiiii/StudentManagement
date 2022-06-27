@@ -128,7 +128,7 @@ void AddStudentToList(StudentNode* student, StudentList* student_list);
  * \param student_list the student list
  * \return a student ptr to the student u want, but if there isn't data match, NULL will be return
  */
-Student* GetStudent(unsigned long long id, StudentList student_list);
+Student* GetStudent(unsigned long long id, StudentList* student_list);
 
 /**
  * \brief init a new student node and return
@@ -171,7 +171,7 @@ void ReleaseStudentDataSetMemory(Student_Data_Set* student_data);
  * \param size declare the size of the new set
  * \return new student set
  */
-StudentSet CreateStudentSet(int size);
+StudentSet* CreateStudentSet(int size);
 
 /**
  * \brief remove a student in the list

@@ -20,5 +20,11 @@ void StudentInfoController();
  */
 void ScoreManagerController();
 
+/**
+ * \brief data statistic controller
+ * \param sort_lesson_list the data list
+ */
+ void DataController(const SortLessonList* sort_lesson_list);
+
 #endif
 

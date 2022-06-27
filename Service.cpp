@@ -1,4 +1,6 @@
-﻿#include "AllHeader.h"
+﻿#include <ctime>
+
+#include "AllHeader.h"
 
 #define YES 0
 
@@ -16,6 +18,14 @@ Status EnsuretheOparation();
  * \return the effect data
  */
 String CheckAndGetInput(int size);
+
+/**
+ * \brief check a student already has the lesson or not
+ * \param student the student will be checked
+ * \param lesson_name the lesson name
+ * \return is exist or not
+ */
+Bool CheckLessonIsExist(Student student, String lesson_name);
 
 Status EnsuretheOparation()
 {
@@ -42,6 +52,19 @@ String CheckAndGetInput(int size)
     }
     printf("\t\t\t请输入正确的数据:");
     return CheckAndGetInput(size);
+}
+
+Bool CheckLessonIsExist(Student student, String lesson_name)
+{
+    LessonNode* lesson_ptr = student.lessons;
+    while (lesson_ptr->next != NULL)
+    {
+        if (lesson_name == lesson_ptr->next->data.name)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 void AddStudent()
@@ -196,7 +219,7 @@ void SearchStudent()
 
     StudentList* student_list = ReadStudent();
 
-    Student* student = GetStudent(id, *student_list);
+    Student* student = GetStudent(id, student_list);
 
     if (student != NULL)
     {
@@ -221,16 +244,16 @@ void SearchStudent()
 void ShowAllStudent()
 {
     system("CLS");
-    StudentList* student_list = ReadStudent();
-    while ((*student_list)->next != NULL)
+    StudentList student_list = *ReadStudent();
+    while (student_list->next != NULL)
     {
-        ShowStudent((*student_list)->next->data);
-        *student_list = (*student_list)->next;
+        ShowStudent(student_list->next->data);
+        student_list = student_list->next;
     }
 
-    if ((*student_list) != NULL)
+    if (student_list != NULL)
     {
-        ReleaseStudentListMemory(student_list);
+        ReleaseStudentListMemory(&student_list);
         student_list = NULL;
     }
 
@@ -374,7 +397,7 @@ void UpdateStudentInfo()
 
     StudentList* student_list = ReadStudent();
 
-    Student* student = GetStudent(request->id, *student_list);
+    Student* student = GetStudent(request->id, student_list);
 
     switch (request->dataType)
     {
@@ -388,11 +411,6 @@ void UpdateStudentInfo()
         student->sex = request->data.char_data;
         break;
     case LESSON:
-        if (*student_list != NULL)
-        {
-            ReleaseStudentListMemory(student_list);
-        }
-
         if (SetLessonScore(student, request->data.lesson_data.name, request->data.lesson_data.score) != OK)
         {
             // handle the exception
@@ -467,7 +485,7 @@ void SearchAllScore()
     ShowSortingList(result_list, ASC);
 }
 
-void SearchScore()
+void SearchScoreByStudent()
 {
     system("CLS");
 
@@ -502,7 +520,7 @@ void SearchScore()
 
     StudentList* student_list = ReadStudent();
 
-    Student* student = GetStudent(id, *student_list);
+    Student* student = GetStudent(id, student_list);
 
     if (student == NULL)
     {
@@ -526,4 +544,264 @@ void SearchScore()
             printf("\n\t\t\t\t成绩: %d", lesson_ptr->next->data.score);
         }
     }
+
+    if (student_list != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+    }
+    student_list = NULL;
+    student = NULL;
+
+    system("pause");
+
+    ScoreManagerWindow();
+}
+
+void SearchScoreByLesson()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入你想要查询的科目:");
+
+    String lesson_name = CheckAndGetInput(30);
+
+    StudentList* student_list = ReadStudent();
+
+    StudentNode* student_ptr = *student_list;
+
+    SortLessonList* sort_lesson_list = CreateNewSortingList();
+
+    // find all the lesson which named 'lesson_name'
+    while (student_ptr->next != NULL)
+    {
+        LessonNode* lesson_ptr = student_ptr->next->data.lessons;
+        while (lesson_ptr->next != NULL)
+        {
+            if (strcmp(lesson_ptr->next->data.name, lesson_name) == 0)
+            {
+                SortLessonNode* tmp_node = CreateNewSortingNode();
+                strcpy_s(tmp_node->student_name, strlen(student_ptr->next->data.name) + 1,
+                         student_ptr->next->data.name);
+                strcpy_s(tmp_node->lesson_name, strlen(lesson_ptr->next->data.name) + 1, lesson_ptr->next->data.name);
+                tmp_node->score = lesson_ptr->next->data.score;
+                AddSortingNodeToList(tmp_node, sort_lesson_list);
+                break;
+            }
+        }
+    }
+
+    if (*student_list != NULL)
+        ReleaseStudentListMemory(student_list);
+
+    ShowSortingList(sort_lesson_list, ASC);
+
+    DataController(sort_lesson_list);
+
+    if (*sort_lesson_list != NULL)
+        ReleaseTheSortingList(sort_lesson_list);
+
+    ScoreManagerWindow();
+}
+
+void UpdateStudentScore()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请输入想要修改的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+    // build the update request body
+    String input_check = CheckAndGetInput(15);
+    char id_str[15] = {0};
+    for (int i = 0; i < 16; i++)
+    {
+        if (14 == i)
+        {
+            id_str[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            id_str[i] = input_check[i];
+        }
+        else
+        {
+            id_str[i] = '\0';
+            break;
+        }
+    }
+    int size = strlen(id_str);
+    UpdateRequest* request = (UpdateRequest*)malloc(sizeof(UpdateRequest));
+    request->id = 0;
+    request->dataType = LESSON;
+    for (int i = 0; i < size; i++)
+    {
+        request->id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+    }
+
+    printf("\n\n\t\t\t请输入该课程的课程名:");
+    request->data.lesson_data = {(String)malloc(sizeof(char) * 30), -1};
+    strcpy_s(request->data.lesson_data.name, 30, CheckAndGetInput(30));
+    printf("\n\t\t\t请输入该课程的分数(请不要输入非数字, 且最大为3位数):");
+    input_check = CheckAndGetInput(3);
+    char score_payload[4] = {0};
+    for (int i = 0; i < 4; i++)
+    {
+        if (3 == i)
+        {
+            score_payload[i] = '\0';
+            break;
+        }
+        int num = input_check[i] - '0';
+        if (num >= 0 && num <= 9)
+        {
+            score_payload[i] = input_check[i];
+        }
+        else
+        {
+            score_payload[i] = '\0';
+            break;
+        }
+    }
+    size = strlen(score_payload);
+    request->data.lesson_data.score = 0;
+    for (int i = 0; i < size; i++)
+    {
+        request->data.lesson_data.score += (int)((score_payload[i] - '0') * pow(10, size - i - 1));
+    }
+
+    StudentList* student_list = ReadStudent();
+
+    Student* student = GetStudent(request->id, student_list);
+
+    if (SetLessonScore(student, request->data.lesson_data.name, request->data.lesson_data.score) != OK)
+    {
+        // handle the exception
+        printf("\n\t\t\t没有找到这门课噢!");
+        printf("\n\n\t\t\t是否要给该学生添加课程(1: 是; 2: 否)？");
+        int order;
+        do
+        {
+            order = GetOrderInput();
+        }
+        while (order != 1 && order != 2);
+        if (order == 1)
+        {
+            LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
+            lesson_node->next = NULL;
+            lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(request->data.lesson_data.name) + 1));
+            strcpy_s(lesson_node->data.name, strlen(request->data.lesson_data.name) + 1,
+                     request->data.lesson_data.name);
+            AddLessonToList(lesson_node, &student->lessons);
+        }
+    }
+    WriteStudent(student_list);
+
+    if (*student_list != NULL)
+    {
+        ReleaseStudentListMemory(student_list);
+    }
+
+    printf("\n\n\t\t\t修改学生成绩成功!");
+
+    printf("\n\n\t\t\t");
+    system("pause");
+
+    ScoreManagerWindow();
+}
+
+void AddLessonForStudent()
+{
+    system("CLS");
+
+    printf("\n\n\t\t\t请选择为班级或为学生个人添加课程(1. 班级; 2. 学生):");
+
+    int order;
+    do
+    {
+        order = GetOrderInput();
+    }
+    while (order != 1 && order != 2);
+    printf("\n\n\t\t\t请输入要添加课程的课程名:");
+    String lesson_name = CheckAndGetInput(30);
+    StudentList student_list = *ReadStudent();
+    if (order == 1)
+    {
+        printf("\n\n\t\t\t请输入想要添加的班级(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+        String clazz = CheckAndGetInput(20);
+        StudentNode* student_ptr = student_list;
+        while (student_ptr->next != NULL)
+        {
+            if ((student_ptr->next->data.clazz = clazz))
+            {
+                LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
+                lesson_node->data.name = (String)malloc(sizeof(char) * 30);
+                strcpy_s(lesson_node->data.name, strlen(lesson_name) + 1, lesson_name);
+                // -1 on behalf of the student has no score
+                lesson_node->data.score = -1.0;
+                AddLessonToList(lesson_node, &student_ptr->next->data.lessons);
+            }
+        }
+    }
+    else
+    {
+        printf("\n\n\t\t\t请输入想要添加的学生学号(请不要输入非数字的字符, 因为那将视为学号的结束符):");
+        // build the update request body
+        String input_check = CheckAndGetInput(15);
+        char id_str[15] = {0};
+        for (int i = 0; i < 16; i++)
+        {
+            if (14 == i)
+            {
+                id_str[i] = '\0';
+                break;
+            }
+            int num = input_check[i] - '0';
+            if (num >= 0 && num <= 9)
+            {
+                id_str[i] = input_check[i];
+            }
+            else
+            {
+                id_str[i] = '\0';
+                break;
+            }
+        }
+        int size = strlen(id_str);
+        int id = 0;
+        for (int i = 0; i < size; i++)
+        {
+            id += (id_str[i] - '0') * (unsigned long long)pow(10, size - i - 1);
+        }
+
+        Student* student = GetStudent(id, &student_list);
+        if (student == NULL)
+        {
+            printf("\n\n\t\t\t未找到相应的学生\n");
+
+            system("pause");
+
+            return ScoreManagerWindow();
+        }
+        LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
+        lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(lesson_name) + 1));
+        strcpy_s(lesson_node->data.name, strlen(lesson_name) + 1, lesson_name);
+        // -1 on behalf of the student has no score
+        lesson_node->data.score = -1.0;
+        lesson_node->next = NULL;
+        if (!CheckLessonIsExist(*student, lesson_name))
+            AddLessonToList(lesson_node, &student->lessons);
+    }
+
+    if (WriteStudent(&student_list) == OK)
+    {
+        printf("\n\n\t\t\t添加课程成功！");
+    }
+    else
+    {
+        printf("\n\n\t\t\t添加课程失败");
+    }
+
+    system("pause");
+
+    ScoreManagerWindow();
 }
