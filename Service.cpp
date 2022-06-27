@@ -246,10 +246,16 @@ void ShowAllStudent()
 {
     system("CLS");
     StudentList student_list = *ReadStudent();
-    while (student_list->next != NULL)
+    StudentNode* student_ptr = student_list;
+    while (student_ptr->next != NULL)
     {
-        ShowStudent(student_list->next->data);
-        student_list = student_list->next;
+        ShowStudent(student_ptr->next->data);
+        student_ptr = student_ptr->next;
+    }
+
+    if (student_list->next == NULL)
+    {
+        printf("\n\n\t\t\t未搜索到任何数据");
     }
 
     if (student_list != NULL)
@@ -583,11 +589,11 @@ void SearchScoreByLesson()
 
     String lesson_name = CheckAndGetInput(30);
 
-    StudentList* student_list = ReadStudent();
+    StudentList student_list = *ReadStudent();
 
-    StudentNode* student_ptr = *student_list;
+    StudentNode* student_ptr = student_list;
 
-    SortLessonList* sort_lesson_list = CreateNewSortingList();
+    SortLessonList sort_lesson_list = *CreateNewSortingList();
 
     // find all the lesson which named 'lesson_name'
     while (student_ptr->next != NULL)
@@ -604,21 +610,23 @@ void SearchScoreByLesson()
                          student_ptr->next->data.name);
                 strcpy_s(tmp_node->lesson_name, strlen(lesson_ptr->next->data.name) + 1, lesson_ptr->next->data.name);
                 tmp_node->score = lesson_ptr->next->data.score;
-                AddSortingNodeToList(tmp_node, sort_lesson_list);
+                AddSortingNodeToList(tmp_node, &sort_lesson_list);
                 break;
             }
+            lesson_ptr = lesson_ptr->next;
         }
+        student_ptr = student_ptr->next;
     }
 
-    if (*student_list != NULL)
-        ReleaseStudentListMemory(student_list);
+    if (student_list != NULL)
+        ReleaseStudentListMemory(&student_list);
 
-    ShowSortingList(sort_lesson_list, ASC);
+    ShowSortingList(&sort_lesson_list, ASC);
 
-    DataController(sort_lesson_list);
+    DataController(&sort_lesson_list);
 
-    if (*sort_lesson_list != NULL)
-        ReleaseTheSortingList(sort_lesson_list);
+    if (sort_lesson_list != NULL)
+        ReleaseTheSortingList(&sort_lesson_list);
 
     ScoreManagerWindow();
 }
@@ -760,6 +768,7 @@ void AddLessonForStudent()
                 lesson_node->data.score = -1.0;
                 AddLessonToList(lesson_node, &student_ptr->next->data.lessons);
             }
+            student_ptr = student_ptr->next;
         }
     }
     else

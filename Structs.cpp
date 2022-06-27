@@ -38,7 +38,34 @@ Status WriteStudent(StudentList* student_list)
     StudentNode* student_ptr = (*student_list)->next;
     for (int i = 0; i < size; i++)
     {
-        students[i] = student_ptr->data;
+        // id
+        students[i].id = student_ptr->data.id;
+        // name
+        students[i].name = (String)malloc(sizeof(char) * (strlen(student_ptr->data.name) + 1));
+        strcpy_s(students[i].name, strlen(student_ptr->data.name) + 1, student_ptr->data.name);
+        // class
+        students[i].clazz = (String)malloc(sizeof(char) * (strlen(student_ptr->data.clazz) + 1));
+        strcpy_s(students[i].clazz, strlen(student_ptr->data.clazz) + 1, student_ptr->data.clazz);
+        // sex
+        students[i].sex = student_ptr->data.sex;
+        // address
+        students[i].address = (String)malloc(sizeof(char) * (strlen(student_ptr->data.address) + 1));
+        strcpy_s(students[i].address, strlen(student_ptr->data.address) + 1, student_ptr->data.address);
+        // lessons
+        students[i].lessons = CreateNewLessonList();
+        LessonNode* lesson_ptr = student_ptr->data.lessons;
+        while (lesson_ptr->next != NULL)
+        {
+            LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
+            lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(lesson_ptr->next->data.name) + 1));
+            strcpy_s(lesson_node->data.name, strlen(lesson_ptr->next->data.name) + 1, lesson_ptr->next->data.name);
+            lesson_node->data.score = lesson_ptr->next->data.score;
+            lesson_node->next = NULL;
+            AddLessonToList(lesson_node, &students[i].lessons);
+            lesson_ptr = lesson_ptr->next;
+        }
+
+
         student_ptr = student_ptr->next;
     }
     student_ptr = NULL;
@@ -59,12 +86,16 @@ Status WriteStudent(StudentList* student_list)
     if (fwrite(ParseToModel(&students, size), sizeof(Student_Data), size, file) != size)
     {
         fclose(file);
+        if (students != NULL)
+            ReleaseStudentSetMemory(&students, size);
         if (counter++ < 3)
             return WriteStudent(student_list);
         printf("\n\t\t\t数据写入失败，请重试");
         counter = 0;
         return ERROR;
     }
+    if (students != NULL)
+        ReleaseStudentSetMemory(&students, size);
     fclose(file);
     file = NULL;
     // reset the counter
@@ -178,7 +209,7 @@ Status SetLessonScore(Student* student, String lesson_name, float score)
     LessonNode* lesson_ptr = student->lessons->next;
     do
     {
-        if (lesson_ptr->data.name == lesson_name)
+        if (lesson_ptr != NULL || lesson_ptr->data.name == lesson_name)
         {
             lesson_ptr->data.score = score;
             lesson_ptr = NULL;
@@ -286,7 +317,7 @@ Student_Data_Set ParseToModel(StudentSet* students, int size)
         strcpy_s(student_data[i].clazz, strlen(student_ptr[i].clazz) + 1, student_ptr[i].clazz);
         student_data[i].sex = student_ptr[i].sex;
         int count = 0;
-        LessonNode* lesson_ptr = (*students)[i].lessons->next;
+        LessonNode* lesson_ptr = student_ptr[i].lessons->next;
         while (count < 20)
         {
             if (lesson_ptr == NULL)
@@ -311,7 +342,6 @@ Student_Data_Set ParseToModel(StudentSet* students, int size)
         }
         strcpy_s(student_data[i].address, strlen(student_ptr[i].address) + 1, student_ptr[i].address);
     }
-    ReleaseStudentSetMemory(students, size);
     return student_data;
 }
 
@@ -570,7 +600,8 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
     printf("\n\t\t\t学生名\t\t课程名\t\t分数");
     while (work_ptr->next != NULL)
     {
-        printf("\n\n\t\t\t%s\t\t%s\t\t%.1f", work_ptr->next->student_name, work_ptr->next->lesson_name, work_ptr->next->score);
+        printf("\n\n\t\t\t%s\t\t%s\t\t%.1f", work_ptr->next->student_name, work_ptr->next->lesson_name,
+               work_ptr->next->score);
         work_ptr = work_ptr->next;
     }
 
