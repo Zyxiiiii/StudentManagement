@@ -375,7 +375,7 @@ StudentSet ParseToObject(Student_Data_Set* student_data_set, int size)
         {
             if (data_ptr[i].lessons[count].name[0] != '\0')
             {
-                LessonNode* lesson_node = (LessonNode*) malloc(sizeof(LessonNode));
+                LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
                 lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(data_ptr[i].lessons[count].name) + 1));
                 strcpy_s((*lesson_node).data.name, (strlen(data_ptr[i].lessons[count].name) + 1),
                          data_ptr[i].lessons[count].name);
@@ -557,7 +557,6 @@ void AddSortingNodeToList(SortLessonNode* sort_lesson_node, SortLessonList* sort
     (*sort_lesson_list)->next = sort_lesson_node;
 }
 
-// TODO wait for testing
 void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
 {
     // reverse or not
@@ -568,10 +567,10 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
 
     // display the list
     SortLessonNode* work_ptr = *sort_lesson_list;
-    printf("\t\t学生名\t\t课程名\t\t分数");
+    printf("\n\t\t\t学生名\t\t课程名\t\t分数");
     while (work_ptr->next != NULL)
     {
-        printf("\n\n\t\t%s\t\t%s\t\t%.1f", work_ptr->student_name, work_ptr->lesson_name, work_ptr->score);
+        printf("\n\n\t\t\t%s\t\t%s\t\t%.1f", work_ptr->next->student_name, work_ptr->next->lesson_name, work_ptr->next->score);
         work_ptr = work_ptr->next;
     }
 
@@ -593,6 +592,8 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
     {
         ReleaseTheSortingList(sort_lesson_list);
     }
+
+    ScoreManagerWindow();
 }
 
 void ReverseTheSortingList(SortLessonList* sort_lesson_list)
@@ -640,8 +641,8 @@ SortLessonList* CreateNewSortingList()
 SortLessonNode* CreateNewSortingNode()
 {
     SortLessonNode* sort_lesson_node = (SortLessonNode*)malloc(sizeof(SortLessonNode));
-    sort_lesson_node->lesson_name = (String)malloc(sizeof(char) * 30);
-    sort_lesson_node->student_name = (String)malloc(sizeof(char) * 32);
+    sort_lesson_node->score = -1.0;
+    sort_lesson_node->next = NULL;
     return sort_lesson_node;
 }
 
@@ -673,7 +674,7 @@ SortLessonList* ParseToSortingList(StudentList* student_list)
 {
     StudentNode* student_ptr = *student_list;
 
-    SortLessonList* sort_lesson_list = CreateNewSortingList();
+    SortLessonList sort_lesson_list = *CreateNewSortingList();
     while (student_ptr->next != NULL)
     {
         if (student_ptr->next->data.lessons->next != NULL)
@@ -683,22 +684,24 @@ SortLessonList* ParseToSortingList(StudentList* student_list)
             {
                 // package the data into the sorting list
                 SortLessonNode* sorting_node = CreateNewSortingNode();
+                sorting_node->lesson_name = (String)malloc(sizeof(char) * (strlen(lesson_ptr->next->data.name) + 1));
+                sorting_node->student_name = (String)malloc(sizeof(char) * (strlen(student_ptr->next->data.name) + 1));
                 strcpy_s(sorting_node->student_name, strlen(student_ptr->next->data.name) + 1,
                          student_ptr->next->data.name);
                 strcpy_s(sorting_node->lesson_name, strlen(lesson_ptr->next->data.name) + 1,
                          lesson_ptr->next->data.name);
                 sorting_node->score = lesson_ptr->next->data.score;
-                AddSortingNodeToList(sorting_node, sort_lesson_list);
+                AddSortingNodeToList(sorting_node, &sort_lesson_list);
                 lesson_ptr = lesson_ptr->next;
             }
-            student_ptr = student_ptr->next;
         }
+        student_ptr = student_ptr->next;
     }
     if (student_list != NULL)
     {
         ReleaseStudentListMemory(student_list);
     }
-    return sort_lesson_list;
+    return &sort_lesson_list;
 }
 
 int GetMaxId(StudentList student_list)

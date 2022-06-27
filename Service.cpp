@@ -443,25 +443,25 @@ void SearchAllScore()
 {
     system("CLS");
 
-    StudentList* student_list = ReadStudent();
+    StudentList student_list = *ReadStudent();
 
-    SortLessonList* sort_lesson_list = ParseToSortingList(student_list);
+    SortLessonList sort_lesson_list = *ParseToSortingList(&student_list);
 
-    if ((*sort_lesson_list)->next != NULL)
+    if (sort_lesson_list->next == NULL)
     {
         printf("\n\n\t\t\t目前没有任何课程成绩噢");
     }
 
-    SortLessonList* result_list = CreateNewSortingList();
-    SortLessonNode* sort_ptr = *sort_lesson_list;
-    while ((*sort_lesson_list)->next != NULL)
+    SortLessonList result_list = *CreateNewSortingList();
+    SortLessonNode* sort_ptr = sort_lesson_list;
+    while (sort_lesson_list->next != NULL)
     {
         SortLessonNode* max_node = NULL;
         SortLessonNode* prior = NULL;
         while (sort_ptr->next != NULL)
         {
             // each turn will find the node has max score and add it to result list
-            if (max_node->score < sort_ptr->next->score)
+            if (max_node == NULL || max_node->score < sort_ptr->next->score)
             {
                 max_node = sort_ptr->next;
                 prior = sort_ptr;
@@ -472,17 +472,26 @@ void SearchAllScore()
         prior->next = max_node->next;
         // let the next pointer of the max node point to null(cut off the relationship between max node and the base list)
         max_node->next = NULL;
+        // create a new node and add it to result list
+        SortLessonNode* tmp_node = CreateNewSortingNode();
+        tmp_node->lesson_name = (String) malloc(sizeof(char) * (strlen(max_node->lesson_name) + 1));
+        tmp_node->student_name = (String) malloc(sizeof(char) * (strlen(max_node->student_name) + 1));
+        strcpy_s(tmp_node->lesson_name, strlen(max_node->lesson_name) + 1, max_node->lesson_name);
+        strcpy_s(tmp_node->student_name, strlen(max_node->student_name) + 1, max_node->student_name);
+        tmp_node->score = max_node->score;
+        tmp_node->next = NULL;
         // add the max node into the result list
-        AddSortingNodeToList(max_node, result_list);
+        AddSortingNodeToList(tmp_node, &result_list);
+        sort_ptr = sort_ptr->next;
     }
 
-    if ((*sort_lesson_list) != NULL)
+    if (sort_lesson_list != NULL)
     {
-        ReleaseTheSortingList(sort_lesson_list);
+        ReleaseTheSortingList(&sort_lesson_list);
     }
     sort_ptr = NULL;
 
-    ShowSortingList(result_list, ASC);
+    ShowSortingList(&result_list, ASC);
 }
 
 void SearchScoreByStudent()
@@ -580,6 +589,8 @@ void SearchScoreByLesson()
             if (strcmp(lesson_ptr->next->data.name, lesson_name) == 0)
             {
                 SortLessonNode* tmp_node = CreateNewSortingNode();
+                tmp_node->lesson_name = (String)malloc(sizeof(char) * (strlen(lesson_ptr->next->data.name) + 1));
+                tmp_node->student_name = (String)malloc(sizeof(char) * (strlen(student_ptr->next->data.name) + 1));
                 strcpy_s(tmp_node->student_name, strlen(student_ptr->next->data.name) + 1,
                          student_ptr->next->data.name);
                 strcpy_s(tmp_node->lesson_name, strlen(lesson_ptr->next->data.name) + 1, lesson_ptr->next->data.name);

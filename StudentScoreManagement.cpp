@@ -4,6 +4,8 @@ int main(int argc, char** argv)
 {
     IndexWindow();
 
+
+    printf("\n\t\t\t");
     system("pause");
 
     return 0;
