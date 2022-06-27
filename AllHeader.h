@@ -59,6 +59,14 @@ typedef int Bool;
  */
 int GetOrderInput();
 
+
+/**
+ * \brief parse the string to float
+ * \param string the base string
+ * \return the float value
+ */
+float StringToFloat(String string);
+
 #endif
 
 

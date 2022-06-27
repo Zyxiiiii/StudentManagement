@@ -54,3 +54,25 @@ int GetOrderInput()
     origin_input = NULL;
     GetOrderInput();
 }
+
+float StringToFloat(char* string)
+{
+    float result = 0;
+    int count = strlen(string) - 1;
+    for (int i = 0; i < strlen(string); i++)
+    {
+        if (string[i] == '.')
+        {
+            count = i - 1;
+            break;
+        }
+    }
+    for (int i = 0; i < strlen(string); i++)
+    {
+        if(count + 1 == 0){
+            i++;
+        }
+        result += (string[i] - '0') * pow(10, count--);
+    }
+    return result;
+}

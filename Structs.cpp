@@ -209,7 +209,7 @@ Status SetLessonScore(Student* student, String lesson_name, float score)
     LessonNode* lesson_ptr = student->lessons->next;
     do
     {
-        if (lesson_ptr != NULL || lesson_ptr->data.name == lesson_name)
+        if (lesson_ptr != NULL && strcmp(lesson_ptr->data.name, lesson_name) == 0)
         {
             lesson_ptr->data.score = score;
             lesson_ptr = NULL;
@@ -217,7 +217,7 @@ Status SetLessonScore(Student* student, String lesson_name, float score)
         }
         lesson_ptr = lesson_ptr->next;
     }
-    while (lesson_ptr->next != NULL);
+    while (lesson_ptr != NULL);
     lesson_ptr = NULL;
     return EXCEPTION;
 }
@@ -409,7 +409,7 @@ StudentSet ParseToObject(Student_Data_Set* student_data_set, int size)
                 lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(data_ptr[i].lessons[count].name) + 1));
                 strcpy_s((*lesson_node).data.name, (strlen(data_ptr[i].lessons[count].name) + 1),
                          data_ptr[i].lessons[count].name);
-                lesson_node->data.score = data_ptr->lessons->score;
+                lesson_node->data.score = data_ptr[i].lessons[count].score;
                 AddLessonToList(lesson_node, &student_set[i].lessons);
                 count ++;
             }
@@ -499,7 +499,7 @@ void ShowStudent(Student student)
         while (lesson_ptr->next != NULL)
         {
             printf("\n\t\t\t\t课程名: %s", lesson_ptr->next->data.name);
-            printf("\n\t\t\t\t成绩: %d", lesson_ptr->next->data.score);
+            printf("\n\t\t\t\t成绩: %.1f分", lesson_ptr->next->data.score < 0 ? 0 : lesson_ptr->next->data.score);
             lesson_ptr = lesson_ptr->next;
         }
     }
@@ -601,7 +601,7 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
     while (work_ptr->next != NULL)
     {
         printf("\n\n\t\t\t%s\t\t%s\t\t%.1f", work_ptr->next->student_name, work_ptr->next->lesson_name,
-               work_ptr->next->score);
+               work_ptr->next->score < 0 ? 0 : work_ptr->next->score);
         work_ptr = work_ptr->next;
     }
 
