@@ -63,6 +63,7 @@ Bool CheckLessonIsExist(Student student, String lesson_name)
         {
             return TRUE;
         }
+        lesson_ptr = lesson_ptr->next;
     }
     return FALSE;
 }
@@ -453,11 +454,15 @@ void SearchAllScore()
     }
 
     SortLessonList result_list = *CreateNewSortingList();
-    SortLessonNode* sort_ptr = sort_lesson_list;
     while (sort_lesson_list->next != NULL)
     {
+        SortLessonNode* sort_ptr = sort_lesson_list;
         SortLessonNode* max_node = NULL;
         SortLessonNode* prior = NULL;
+        if (sort_ptr->next == NULL)
+        {
+            break;
+        }
         while (sort_ptr->next != NULL)
         {
             // each turn will find the node has max score and add it to result list
@@ -474,22 +479,20 @@ void SearchAllScore()
         max_node->next = NULL;
         // create a new node and add it to result list
         SortLessonNode* tmp_node = CreateNewSortingNode();
-        tmp_node->lesson_name = (String) malloc(sizeof(char) * (strlen(max_node->lesson_name) + 1));
-        tmp_node->student_name = (String) malloc(sizeof(char) * (strlen(max_node->student_name) + 1));
+        tmp_node->lesson_name = (String)malloc(sizeof(char) * (strlen(max_node->lesson_name) + 1));
+        tmp_node->student_name = (String)malloc(sizeof(char) * (strlen(max_node->student_name) + 1));
         strcpy_s(tmp_node->lesson_name, strlen(max_node->lesson_name) + 1, max_node->lesson_name);
         strcpy_s(tmp_node->student_name, strlen(max_node->student_name) + 1, max_node->student_name);
         tmp_node->score = max_node->score;
         tmp_node->next = NULL;
         // add the max node into the result list
         AddSortingNodeToList(tmp_node, &result_list);
-        sort_ptr = sort_ptr->next;
     }
 
     if (sort_lesson_list != NULL)
     {
         ReleaseTheSortingList(&sort_lesson_list);
     }
-    sort_ptr = NULL;
 
     ShowSortingList(&result_list, ASC);
 }
@@ -534,14 +537,17 @@ void SearchScoreByStudent()
     if (student == NULL)
     {
         printf("\n\n\t\t\t没有找到学号为 %llu 的学生的信息...", id);
+        printf("\n\n\t\t\t");
+        system("pause");
         return ScoreManagerWindow();
     }
 
     printf("\n\n\t\t\t学号: %llu", student->id);
+    printf("\n\t\t\t姓名: %s", student->name);
 
     if (student->lessons->next == NULL)
     {
-        printf("\n\t\t\t该学生当前没有课程\n");
+        printf("\n\n\t\t\t该学生当前没有课程\n");
     }
     else
     {
@@ -550,7 +556,8 @@ void SearchScoreByStudent()
         while (lesson_ptr->next != NULL)
         {
             printf("\n\t\t\t\t课程名: %s", lesson_ptr->next->data.name);
-            printf("\n\t\t\t\t成绩: %d", lesson_ptr->next->data.score);
+            printf("\n\t\t\t\t成绩: %d分\n", lesson_ptr->next->data.score);
+            lesson_ptr = lesson_ptr->next;
         }
     }
 
@@ -560,6 +567,8 @@ void SearchScoreByStudent()
     }
     student_list = NULL;
     student = NULL;
+
+    printf("\n\n\t\t\t");
 
     system("pause");
 
