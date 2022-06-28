@@ -605,17 +605,21 @@ void ShowSortingList(SortLessonList* sort_lesson_list, DisplayMode display_mode)
         work_ptr = work_ptr->next;
     }
 
-    printf("\n\n\t\t\t请输入命令以继续(1. 正序输出; 2. 倒序输出; 3. 退出):");
+    printf("\n\n\t\t\t请输入命令以继续(1. 正序输出; 2. 倒序输出; 3. 统计; 4. 退出):");
     int order = GetOrderInput();
-    while (order < 1 || order > 3)
+    while (order < 1 || order > 4)
     {
         order = GetOrderInput();
     }
-    if (order != 3)
+    if (order != 4 && order != 3)
     {
         // if 'order' is equal to ASC(1), show this list in common again. Otherwise, reverse it and show again
         system("CLS");
         ShowSortingList(sort_lesson_list, order == ASC ? ASC : DESC);
+    }
+    if (order == 3)
+    {
+        DataController(sort_lesson_list);
     }
 
     // free the memory
@@ -733,6 +737,35 @@ SortLessonList* ParseToSortingList(StudentList* student_list)
         ReleaseStudentListMemory(student_list);
     }
     return &sort_lesson_list;
+}
+
+float SortAverage(SortLessonList sort_lesson_list)
+{
+    int count = 0;
+    float sum = 0;
+    while (sort_lesson_list->next != NULL)
+    {
+        sum += sort_lesson_list->next->score < 0 ? 0 : sort_lesson_list->next->score;
+        count ++;
+        sort_lesson_list = sort_lesson_list->next;
+    }
+    return sum / count;
+}
+
+float SortExcellentRate(SortLessonList sort_lesson_list)
+{
+    int excellent = 0;
+    int count = 0;
+    while (sort_lesson_list->next != NULL)
+    {
+        count++;
+        if (sort_lesson_list->next->score > 90)
+        {
+            excellent++;
+        }
+        sort_lesson_list = sort_lesson_list->next;
+    }
+    return 1.0 * excellent / count;
 }
 
 int GetMaxId(StudentList student_list)

@@ -78,25 +78,20 @@ void DataController(const SortLessonList* sort_lesson_list)
 {
     printf("\n\t\t\t1. 求平均值");
     printf("\n\t\t\t2. 求优秀率");
-    printf("\n\t\t\t3. 求某一科大于某分数的所有同学");
-    printf("\n\t\t\t4. 按总成绩由大到小排序");
-    printf("\n\t\t\t5. 按总成绩由小到大排序");
-    printf("\n\t\t\t6. 退出");
+    printf("\n\t\t\t3. 退出");
     printf("\n\n\t\t\t请选择您的操作:");
     switch (GetOrderInput())
     {
     case 1:
+        printf("\n\n\t\t\t该组数据的平均值为:%.3f", SortAverage(*sort_lesson_list));
+        system("pause");
         break;
     case 2:
+        printf("\n\n\t\t\t该组数据的优秀率为:%.3f%%", SortExcellentRate(*sort_lesson_list) * 100);
+        system("pause");        
         break;
     case 3:
-        break;
-    case 4:
-        break;
-    case 5:
-        break;
-    case 6:
-        return ScoreManagerWindow();
+        return;
     default:
         printf("\t\t\t请输入正确的命令:");
     }

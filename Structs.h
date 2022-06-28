@@ -304,4 +304,18 @@ void ReleaseTheSortingList(SortLessonList* sort_lesson_list);
  */
 SortLessonList* ParseToSortingList(StudentList* student_list);
 
+/**
+ * \brief calculate the average of the list
+ * \param sort_lesson_list the data list
+ * \return the result
+ */
+float SortAverage(SortLessonList sort_lesson_list);
+
+/**
+ * \brief calculate the excellent rate of a list
+ * \param sort_lesson_list the data list
+ * \return the excellent rate of this list
+ */
+float SortExcellentRate(SortLessonList sort_lesson_list);
+
 #endif // !STUDENT_STRUCT_FUNCTION
