@@ -78,19 +78,25 @@ void DataController(const SortLessonList* sort_lesson_list)
 {
     printf("\n\t\t\t1. 求平均值");
     printf("\n\t\t\t2. 求优秀率");
-    printf("\n\t\t\t3. 退出");
+    printf("\n\t\t\t3. 求及格率");
+    printf("\n\t\t\t4. 不及格名单");
+    printf("\n\t\t\t5. 退出");
     printf("\n\n\t\t\t请选择您的操作:");
     switch (GetOrderInput())
     {
     case 1:
-        printf("\n\n\t\t\t该组数据的平均值为:%.3f", SortAverage(*sort_lesson_list));
-        system("pause");
+        printf("\n\n\t\t\t该组成绩的平均值为:%.3f\n\n", SortAverage(*sort_lesson_list));
         break;
     case 2:
-        printf("\n\n\t\t\t该组数据的优秀率为:%.3f%%", SortExcellentRate(*sort_lesson_list) * 100);
-        system("pause");        
+        printf("\n\n\t\t\t该组成绩的优秀率为:%.3f%%\n\n", SortExcellentRate(*sort_lesson_list) * 100);    
         break;
     case 3:
+        printf("\n\n\t\t\t该组成绩的及格率为:%.3f%%\n\n", SortPassRate(*sort_lesson_list) * 100);
+        break;
+    case 4:
+        ShowTheFailList(*sort_lesson_list);
+        break;
+    case 5:
         return;
     default:
         printf("\t\t\t请输入正确的命令:");

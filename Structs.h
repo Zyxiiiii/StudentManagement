@@ -318,4 +318,17 @@ float SortAverage(SortLessonList sort_lesson_list);
  */
 float SortExcellentRate(SortLessonList sort_lesson_list);
 
+/**
+ * \brief calculate the pass rate and return
+ * \param sort_lesson_list the data list
+ * \return the pass rate
+ */
+float SortPassRate(SortLessonList sort_lesson_list);
+
+/**
+ * \brief show the student who was failed
+ * \param sort_lesson_list the data list
+ */
+void ShowTheFailList(SortLessonList sort_lesson_list);
+
 #endif // !STUDENT_STRUCT_FUNCTION

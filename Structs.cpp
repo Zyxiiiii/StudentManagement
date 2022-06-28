@@ -768,6 +768,37 @@ float SortExcellentRate(SortLessonList sort_lesson_list)
     return 1.0 * excellent / count;
 }
 
+float SortPassRate(SortLessonList sort_lesson_list)
+{
+    int count = 0;
+    int pass = 0;
+    while (sort_lesson_list->next != NULL)
+    {
+        count++;
+        if (sort_lesson_list->next->score > 60.0)
+        {
+            pass++;
+        }
+        sort_lesson_list = sort_lesson_list->next;
+    }
+    return 1.0 * pass / count;
+}
+
+void ShowTheFailList(SortLessonList sort_lesson_list)
+{
+    printf("\n\n\t\t\t以下为成绩不及格的课程及学生名单:");
+    while (sort_lesson_list->next != NULL)
+    {
+        if (sort_lesson_list->next->score < 60.0)
+        {
+            printf("\n\n\t\t\t姓名：%s;\n\t\t\t课程名： %s;\n\t\t\t成绩：%.1f分", sort_lesson_list->next->student_name, sort_lesson_list->next->lesson_name,
+                   sort_lesson_list->next->score < 0 ? 0 : sort_lesson_list->next->score);
+        }
+        sort_lesson_list = sort_lesson_list->next;
+    }
+    printf("\n\n\t\t\t");
+}
+
 int GetMaxId(StudentList student_list)
 {
     unsigned long long max = NOT_ID;
