@@ -409,15 +409,30 @@ void UpdateStudentInfo()
     switch (request->dataType)
     {
     case NAME:
+        if (student->name != NULL)
+        {
+            free(student->name);
+        }
+        student->name = (String)malloc(sizeof(char) * (strlen(request->data.str_data) + 1));
         strcpy_s(student->name, strlen(request->data.str_data) + 1, request->data.str_data);
         break;
     case CLASS:
+        if (student->clazz != NULL)
+        {
+            free(student->clazz);
+        }
+        student->clazz = (String)malloc(sizeof(char) * (strlen(request->data.str_data) + 1));
         strcpy_s(student->clazz, strlen(request->data.str_data) + 1, request->data.str_data);
         break;
     case SEX:
         student->sex = request->data.char_data;
         break;
     case LESSON:
+        if (student == NULL)
+        {
+            printf("没有找到该学生！");
+            break;
+        }
         if (SetLessonScore(student, request->data.lesson_data.name, request->data.lesson_data.score) != OK)
         {
             // handle the exception
@@ -427,6 +442,11 @@ void UpdateStudentInfo()
         }
         break;
     case ADDRESS:
+        if (student->address != NULL)
+        {
+            free(student->address);
+        }
+        student->address = (String)malloc(sizeof(char) * (strlen(request->data.str_data) + 1));
         strcpy_s(student->address, strlen(request->data.str_data) + 1, request->data.str_data);
         break;
     }

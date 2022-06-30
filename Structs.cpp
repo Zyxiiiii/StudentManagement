@@ -538,10 +538,7 @@ void ReleaseStudentListMemory(StudentList* student_list)
             free(student_ptr->data.clazz);
             student_ptr->data.clazz = NULL;
         }
-        StudentNode* tmp = student_ptr;
         student_ptr = student_ptr->next;
-        free(tmp);
-        tmp = NULL;
     }
     student_ptr = NULL;
 }

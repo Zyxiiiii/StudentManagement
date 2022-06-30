@@ -34,22 +34,24 @@ void UpdateStudentInfo();
  */
 void SearchAllScore();
 
-// todo waiting for test
 /**
  * \brief search a student's score
  */
 void SearchScoreByStudent();
 
-// todo waiting for test
 /**
  * \brief search the score of some lesson
  */
 void SearchScoreByLesson();
 
-// todo waiting for test
+/**
+ * \brief update the score of a student by id
+ */
 void UpdateStudentScore();
 
-// todo waiting for test
+/**
+ * \brief add a lesson for student by class or id
+ */
 void AddLessonForStudent();
 
 #endif

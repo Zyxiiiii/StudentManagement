@@ -94,8 +94,6 @@ enum DisplayMode { ASC=1, DESC=2 };
 
 #define STUDENT_STRUCT_FUNCTION
 
-// the declarations about student struct
-
 /**
  * \brief count the student number and return
  * \param student_list the student list
@@ -186,8 +184,6 @@ Status RemoveStudent(unsigned long long id, StudentList* student_list);
  * \return new student data set
  */
 Student_Data_Set CreateStudentDataSet(int size);
-
-// the declaration for Lesson struct
 
 /**
  * \brief set a score by student's id and lesson name
