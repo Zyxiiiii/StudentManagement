@@ -582,7 +582,7 @@ void SearchScoreByStudent()
         while (lesson_ptr->next != NULL)
         {
             printf("\n\t\t\t\t课程名: %s", lesson_ptr->next->data.name);
-            printf("\n\t\t\t\t成绩: %d分\n", lesson_ptr->next->data.score);
+            printf("\n\t\t\t\t成绩: %.1f分\n", lesson_ptr->next->data.score < 0 ? 0 : lesson_ptr->next->data.score);
             lesson_ptr = lesson_ptr->next;
         }
     }
@@ -721,8 +721,9 @@ void UpdateStudentScore()
 
     if (student == NULL)
     {
-        printf("\n\n\t\t\t未找到相应的学生, 请重新输入学号!\n\t\t\t");
-        system("pause");        
+        printf("\n\n\t\t\t未找到相应的学生!\n\t\t\t");
+        system("pause");
+        return ScoreManagerWindow();
     }
 
     if (SetLessonScore(student, request->data.lesson_data.name, request->data.lesson_data.score) != OK)
@@ -743,6 +744,7 @@ void UpdateStudentScore()
             lesson_node->data.name = (String)malloc(sizeof(char) * (strlen(request->data.lesson_data.name) + 1));
             strcpy_s(lesson_node->data.name, strlen(request->data.lesson_data.name) + 1,
                      request->data.lesson_data.name);
+            lesson_node->data.score = request->data.lesson_data.score;
             AddLessonToList(lesson_node, &student->lessons);
         }
     }
@@ -771,12 +773,12 @@ void AddLessonForStudent()
 
     printf("\n\n\t\t\t请选择为班级或为学生个人添加课程(1. 班级; 2. 学生):");
 
-    int order;
-    do
+    int order = GetOrderInput();
+    while (order != 1 && order != 2)
     {
+        printf("\t\t\t请输入正确的命令:");
         order = GetOrderInput();
     }
-    while (order != 1 && order != 2);
     printf("\n\n\t\t\t请输入要添加课程的课程名:");
     String lesson_name = CheckAndGetInput(30);
     StudentList student_list = *ReadStudent();
@@ -785,9 +787,10 @@ void AddLessonForStudent()
         printf("\n\n\t\t\t请输入想要添加的班级:");
         String clazz = CheckAndGetInput(20);
         StudentNode* student_ptr = student_list;
+        Bool isAdded = FALSE;
         while (student_ptr->next != NULL)
         {
-            if ((student_ptr->next->data.clazz = clazz))
+            if (student_ptr->next->data.clazz == clazz)
             {
                 LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
                 lesson_node->data.name = (String)malloc(sizeof(char) * 30);
@@ -795,8 +798,15 @@ void AddLessonForStudent()
                 // -1 on behalf of the student has no score
                 lesson_node->data.score = -1.0;
                 AddLessonToList(lesson_node, &student_ptr->next->data.lessons);
+                isAdded = TRUE;
             }
             student_ptr = student_ptr->next;
+        }
+        if (!isAdded)
+        {
+            printf("\n\n\t\t\t没有找到相应的班级!\n\t\t\t");
+            system("pause");
+            return ScoreManagerWindow();
         }
     }
     else
@@ -833,7 +843,7 @@ void AddLessonForStudent()
         Student* student = GetStudent(id, &student_list);
         if (student == NULL)
         {
-            printf("\n\n\t\t\t未找到相应的学生\n");
+            printf("\n\n\t\t\t未找到相应的学生\n\t\t\t");
 
             system("pause");
 
