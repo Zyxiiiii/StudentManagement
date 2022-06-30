@@ -7,3 +7,4 @@ MigrationBackup/
 /.idea/
 ./cmake-build-debug/
 **/*.docx
+**/*.pdf
