@@ -790,7 +790,7 @@ void AddLessonForStudent()
         Bool isAdded = FALSE;
         while (student_ptr->next != NULL)
         {
-            if (student_ptr->next->data.clazz == clazz)
+            if (strcmp(student_ptr->next->data.clazz, clazz) == 0)
             {
                 LessonNode* lesson_node = (LessonNode*)malloc(sizeof(LessonNode));
                 lesson_node->data.name = (String)malloc(sizeof(char) * 30);
